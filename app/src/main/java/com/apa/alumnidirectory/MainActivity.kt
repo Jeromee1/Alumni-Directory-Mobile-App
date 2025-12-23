@@ -11,7 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.apa.alumnidirectory.ui.nav.AppNav
-import com.apa.alumnidirectory.ui.theme.MOBStarterAppTheme
+import com.apa.alumnidirectory.ui.theme.AlumniDirectoryTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MOBStarterAppTheme {
+            AlumniDirectoryTheme {
                 ComposeApp()
             }
         }
