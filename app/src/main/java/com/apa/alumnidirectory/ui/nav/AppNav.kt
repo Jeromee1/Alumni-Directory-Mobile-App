@@ -5,7 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.apa.alumnidirectory.ui.home.HomeScreen
+import com.apa.alumnidirectory.ui.screens.home.HomeScreen
+import com.apa.alumnidirectory.ui.screens.login.LoginScreen
 
 @Composable
 fun AppNav(
@@ -14,9 +15,10 @@ fun AppNav(
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screen.Home,
+        startDestination = Screen.Login,
         modifier = modifier
     ) {
         composable<Screen.Home> { HomeScreen(navController) }
+        composable<Screen.Login> { LoginScreen(navController) }
     }
 }
