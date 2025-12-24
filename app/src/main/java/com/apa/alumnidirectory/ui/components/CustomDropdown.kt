@@ -23,17 +23,18 @@ import com.apa.alumnidirectory.ui.theme.Primary
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDropdown(
-    items: List<String>
+    items: List<String>,
+    selectedItem: String,
+    onSelectedChange:(String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(items[0]) }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
     ) {
         OutlinedTextField(
-            value = selectedText,
+            value = selectedItem,
             onValueChange = {  },
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
@@ -56,7 +57,7 @@ fun CustomDropdown(
                 DropdownMenuItem(
                     text = { Text(item) },
                     onClick = {
-                        selectedText = item
+                        onSelectedChange(item)
                         expanded = false
                     }
                 )
