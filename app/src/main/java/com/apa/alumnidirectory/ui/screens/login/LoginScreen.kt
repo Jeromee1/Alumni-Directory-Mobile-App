@@ -1,7 +1,6 @@
 package com.apa.alumnidirectory.ui.screens.login
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,7 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.R
-import com.apa.alumnidirectory.ui.theme.Secondary
+import com.apa.alumnidirectory.data.model.customtextfield.FieldData
+import com.apa.alumnidirectory.ui.components.CustomTextFieldBox
+import com.apa.alumnidirectory.ui.nav.Screen
 
 @Composable
 fun LoginScreen(
@@ -66,7 +66,7 @@ fun LoginScreen(
                 )
                 TextButton(
                     onClick = {
-                        //Navigate to register
+                        navController.navigate(Screen.Register)
                     }
                 ) {
                     Text(
@@ -76,42 +76,13 @@ fun LoginScreen(
                     )
                 }
             }
-            Box(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(28.dp)
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                        .background(Secondary, RoundedCornerShape(16.dp))
-                        .padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    Text(
-                        "Login",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    TextField(
-                        value = _email,
-                        onValueChange = { _email = it },
-                        shape = RoundedCornerShape(12.dp),
-                        placeholder = { Text(
-                            "Email"
-                        ) },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    TextField(
-                        value = _password,
-                        onValueChange = { _password = it },
-                        shape = RoundedCornerShape(12.dp),
-                        placeholder = { Text(
-                            "Password"
-                        ) },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
+            CustomTextFieldBox(
+                "Login",
+                listOf(
+                    FieldData("Email", _email) { _email = it },
+                    FieldData("Password", _password) { _password = it }
+                )
+            )
         }
         Button(
             modifier = Modifier.align(Alignment.BottomCenter)
