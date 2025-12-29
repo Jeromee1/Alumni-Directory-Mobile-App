@@ -1,6 +1,9 @@
 package com.apa.alumnidirectory.data.repo.impls
 
+import android.util.Log
+import com.apa.alumnidirectory.data.model.auth.LoginReq
 import com.apa.alumnidirectory.data.model.auth.RegisterUserReq
+import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.data.repo.AuthRepo
 import com.apa.alumnidirectory.data.utils.buildUserData
 import com.apa.alumnidirectory.service.FirebaseAuthService
@@ -22,5 +25,16 @@ class AuthRepoImpl @Inject constructor(
         val userData = buildUserData(user, userUid)
 
         dbRef.document(userUid).set(userData.toMap()).await()
+    }
+
+    override suspend fun login(req: LoginReq): UserData {
+        return authService.login(req.email, req.password).let { user ->
+            Log.d("debug", user.isEmailVerified.toString())
+            dbRef.document(user.uid)
+                .get()
+                .await()
+                .toObject(UserData::class.java)
+                ?: throw IllegalStateException("User doesn't exist")
+        }
     }
 }
