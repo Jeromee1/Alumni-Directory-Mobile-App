@@ -17,4 +17,6 @@ data class RegisterUserReq(
     val contactPreference: String = PreferredContact.entries.first().value,
     val bio: String? = null,
     val photoUrl: String? = null,
+    val createdAt: Long = System.currentTimeMillis(),
+    val approvedAt: Long? = null
 )
