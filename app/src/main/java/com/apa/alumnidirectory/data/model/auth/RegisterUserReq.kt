@@ -6,6 +6,7 @@ data class RegisterUserReq(
     val fullName: String = "",
     val email: String = "",
     val password: String = "",
+    val password2: String = "",
     val graduationYear: String = "",
     val department: String = "",
     val position: String = "",
