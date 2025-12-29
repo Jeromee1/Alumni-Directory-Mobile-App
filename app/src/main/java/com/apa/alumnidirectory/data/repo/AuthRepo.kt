@@ -11,4 +11,8 @@ interface AuthRepo {
 //    suspend fun fetchMyProfile(id: String): UserData
 //    suspend fun updateMyProfile(profileData: UpdateProfileReq)
 //    suspend fun logout()
+    suspend fun fetchAllUsers(): List<UserData>
+    suspend fun fetchPendingUsers(): List<UserData>
+//    suspend fun fetchApprovedUsers(): List<UserData>
+//    suspend fun fetchRejectedUsers(): List<UserData>
 }

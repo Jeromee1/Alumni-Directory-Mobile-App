@@ -22,6 +22,8 @@ fun buildUserData(req: RegisterUserReq, uid: String): UserData {
         req.contactPreference,
         ContactInfo(),
         req.bio,
-        req.photoUrl
+        req.photoUrl,
+        req.createdAt,
+        req.approvedAt
     )
 }
