@@ -26,18 +26,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.R
+import com.apa.alumnidirectory.data.model.auth.LoginReq
 import com.apa.alumnidirectory.data.model.customtextfield.FieldData
 import com.apa.alumnidirectory.ui.components.CustomTextFieldBox
 import com.apa.alumnidirectory.ui.nav.Screen
 
 @Composable
 fun LoginScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
-    var _email by remember { mutableStateOf("") }
-    var _password by remember { mutableStateOf("") }
+    var form by remember { mutableStateOf(LoginReq()) }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -79,8 +81,8 @@ fun LoginScreen(
             CustomTextFieldBox(
                 "Login",
                 listOf(
-                    FieldData("Email", _email) { _email = it },
-                    FieldData("Password", _password) { _password = it }
+                    FieldData("Email", form.email) { form = form.copy(email = it)},
+                    FieldData("Password", form.password) { form = form.copy(password = it) }
                 )
             )
         }
@@ -91,6 +93,7 @@ fun LoginScreen(
             shape = RoundedCornerShape(12.dp),
             onClick = {
                 //Login function stuff
+                viewModel.login(form)
             }
         ) {
             Text(
