@@ -112,7 +112,7 @@ fun Home(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
-                    modifier = Modifier.fillMaxWidth(0.7f)
+                    modifier = Modifier.fillMaxWidth(0.6f)
                 ) {
                     CustomTextField(
                         FieldData(
