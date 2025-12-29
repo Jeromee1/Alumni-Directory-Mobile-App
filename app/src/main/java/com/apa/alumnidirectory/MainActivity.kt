@@ -24,26 +24,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AlumniDirectoryTheme {
-                ComposeApp()
-            }
-        }
-    }
-}
-
-@Composable
-fun ComposeApp() {
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        contentColor = Text1
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier.fillMaxSize()
-                .background(Background)
-        ) {
-            Box(
-                modifier = Modifier.padding(innerPadding)
-                    .fillMaxSize()
-            ) {
                 AppNav()
             }
         }

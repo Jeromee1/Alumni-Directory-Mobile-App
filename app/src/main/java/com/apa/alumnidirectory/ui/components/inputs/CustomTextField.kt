@@ -1,4 +1,4 @@
-package com.apa.alumnidirectory.ui.components
+package com.apa.alumnidirectory.ui.components.inputs
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape

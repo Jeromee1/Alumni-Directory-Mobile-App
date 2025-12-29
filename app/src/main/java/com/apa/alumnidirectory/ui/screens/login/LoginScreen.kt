@@ -31,7 +31,7 @@ import androidx.navigation.NavController
 import com.apa.alumnidirectory.R
 import com.apa.alumnidirectory.data.model.auth.LoginReq
 import com.apa.alumnidirectory.data.model.customtextfield.FieldData
-import com.apa.alumnidirectory.ui.components.CustomTextFieldBox
+import com.apa.alumnidirectory.ui.components.inputs.CustomTextFieldBox
 import com.apa.alumnidirectory.ui.nav.Screen
 
 @Composable

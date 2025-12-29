@@ -1,4 +1,4 @@
-package com.apa.alumnidirectory.ui.components
+package com.apa.alumnidirectory.ui.components.inputs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
