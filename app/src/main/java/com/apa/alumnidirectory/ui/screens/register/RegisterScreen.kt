@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.R
 import com.apa.alumnidirectory.data.enums.PreferredContact
+import com.apa.alumnidirectory.data.model.auth.RegisterUserReq
 import com.apa.alumnidirectory.data.model.customtextfield.FieldData
 import com.apa.alumnidirectory.ui.components.CustomDropdown
 import com.apa.alumnidirectory.ui.components.CustomTextFieldBox
@@ -44,24 +45,17 @@ import com.apa.alumnidirectory.ui.theme.SecondaryG
 fun RegisterScreen(
     navController: NavController
 ) {
-    var _fullName by remember { mutableStateOf("") }
-    var _email by remember { mutableStateOf("") }
-    var _password by remember { mutableStateOf("") }
-    var _graduationYear by remember { mutableStateOf("") }
-    var _department by remember { mutableStateOf("") }
-    var _position by remember { mutableStateOf("") }
-    var _company by remember { mutableStateOf("") }
-    var _techStack by remember { mutableStateOf("") }
-    var _city by remember { mutableStateOf("") }
-    var _country by remember { mutableStateOf("") }
-    var _contactPreference by remember { mutableStateOf("") }
+    var form by remember { mutableStateOf(RegisterUserReq()) }
     val scrollState = rememberScrollState()
 
     Column(
-        modifier = Modifier.fillMaxWidth().verticalScroll(scrollState)
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(scrollState)
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .fillMaxHeight(0.25f),
             contentAlignment = Alignment.Center
         ) {
@@ -96,82 +90,98 @@ fun RegisterScreen(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            CustomTextFieldBox(
-                categoryName = "Basic Info",
-                fields = listOf(
-                    FieldData("Fullname", _fullName) { _fullName = it },
-                    FieldData("Email", _email) { _email = it },
-                    FieldData("Password", _password) { _password = it }
-                )
-            )
-
-            CustomTextFieldBox(
-                categoryName = "Academic Info",
-                fields = listOf(
-                    FieldData("Graduation Year", _graduationYear) { _graduationYear = it },
-                    FieldData("Department", _department) { _department = it }
-                )
-            )
-
-            CustomTextFieldBox(
-                categoryName = "Professional Info",
-                fields = listOf(
-                    FieldData("Position", _position) { _position = it },
-                    FieldData("Company", _company) { _company = it },
-                    FieldData("Tech Stack", _techStack) { _techStack = it }
-                )
-            )
-
-            CustomTextFieldBox(
-                categoryName = "Location",
-                fields = listOf(
-                    FieldData("City", _city) { _city = it },
-                    FieldData("Country", _country) { _country = it },
-                )
-            )
-
-            Box(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(28.dp, 16.dp)
-                    .shadow(4.dp)
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                        .background(SecondaryG, RoundedCornerShape(12.dp))
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Text(
-                        text = "Contact Preference",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
+            form.apply {
+                CustomTextFieldBox(
+                    categoryName = "Basic Info",
+                    fields = listOf(
+                        FieldData("Full Name", fullName)
+                        { form = copy(fullName = it) },
+                        FieldData("Email", email)
+                        { form = copy(email = it) },
+                        FieldData("Password", password)
+                        { form = copy(password = it) }
                     )
-                    CustomDropdown(
-                        PreferredContact.entries.map { it.value }
-                    )
-                }
-            }
+                )
 
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Button(
+                CustomTextFieldBox(
+                    categoryName = "Academic Info",
+                    fields = listOf(
+                        FieldData("Graduation Year", graduationYear)
+                        { form = copy(graduationYear = it) },
+                        FieldData("Department", department)
+                        { form = copy(department = it) }
+                    )
+                )
+
+                CustomTextFieldBox(
+                    categoryName = "Professional Info",
+                    fields = listOf(
+                        FieldData("Position", position)
+                        { form = copy(position = it) },
+                        FieldData("Company", company)
+                        { form = copy(company = it) },
+                        FieldData("Tech Stack", techStack)
+                        { form = copy(techStack = it) }
+                    )
+                )
+
+                CustomTextFieldBox(
+                    categoryName = "Location",
+                    fields = listOf(
+                        FieldData("City", city)
+                        { form = copy(city = it) },
+                        FieldData("Country", country)
+                        { form = copy(country = it) },
+                    )
+                )
+
+                Box(
                     modifier = Modifier
-                        .width(300.dp)
-                        .padding(60.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    onClick = {
-                        //Register function stuff
-                    }
+                        .fillMaxWidth()
+                        .padding(28.dp, 16.dp)
+                        .shadow(4.dp)
                 ) {
-                    Text(
-                        "Register",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(8.dp)
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(SecondaryG, RoundedCornerShape(12.dp))
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Text(
+                            text = "Contact Preference",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        CustomDropdown(
+                            PreferredContact.entries.map { it.value },
+                            contactPreference,
+                        )
+                        { form = copy(contactPreference = it) }
+                    }
+                }
+
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Button(
+                        modifier = Modifier
+                            .width(300.dp)
+                            .padding(60.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        onClick = {
+                            //Register function stuff
+                        }
+                    ) {
+                        Text(
+                            "Register",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
                 }
             }
         }

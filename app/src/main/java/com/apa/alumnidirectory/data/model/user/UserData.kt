@@ -9,7 +9,7 @@ data class UserData(
     val email: String = "",
     val status: String = "",
     val role: String = "",
-    val graduationYear: Int = 0,
+    val graduationYear: String = "",
     val department: String = "",
     val position: String = "",
     val company: String = "",
