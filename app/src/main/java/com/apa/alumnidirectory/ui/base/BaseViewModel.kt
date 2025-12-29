@@ -21,13 +21,15 @@ open class BaseViewModel : ViewModel() {
     }
 
     fun validateEmail(email: String): String? {
-        return if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) "Invalid email"
+        return if(email.isBlank()) "Email cannot be empty."
+        else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) "Invalid email."
         else null
     }
 
     fun validatePasswords(pass: String, pass2: String): String? {
-        return if (pass.length < 8) "Password must be at least 8 characters"
-        else if (pass != pass2) "Password and Confirm Password must match"
+        return if(pass.isBlank() || pass2.isBlank()) "Password fields cannot be empty."
+        else if (pass.length < 8) "Password must be at least 8 characters."
+        else if (pass != pass2) "Password and Confirm Password must match."
         else null
     }
 
