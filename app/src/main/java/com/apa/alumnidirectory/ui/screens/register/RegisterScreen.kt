@@ -20,6 +20,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.R
 import com.apa.alumnidirectory.data.enums.PreferredContact
@@ -43,10 +45,17 @@ import com.apa.alumnidirectory.ui.theme.SecondaryG
 
 @Composable
 fun RegisterScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: RegisterViewModel = hiltViewModel()
 ) {
     var form by remember { mutableStateOf(RegisterUserReq()) }
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(Unit) {
+        viewModel.finish.collect {
+            navController.popBackStack()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -99,7 +108,9 @@ fun RegisterScreen(
                         FieldData("Email", email)
                         { form = copy(email = it) },
                         FieldData("Password", password)
-                        { form = copy(password = it) }
+                        { form = copy(password = it) },
+                        FieldData("Confirm Password", password2)
+                        { form = copy(password2 = it)}
                     )
                 )
 
@@ -172,7 +183,7 @@ fun RegisterScreen(
                             .padding(60.dp),
                         shape = RoundedCornerShape(12.dp),
                         onClick = {
-                            //Register function stuff
+                            viewModel.register(form)
                         }
                     ) {
                         Text(
