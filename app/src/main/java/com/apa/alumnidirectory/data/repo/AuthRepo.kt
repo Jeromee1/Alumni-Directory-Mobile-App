@@ -13,6 +13,6 @@ interface AuthRepo {
 //    suspend fun logout()
     suspend fun fetchAllUsers(): List<UserData>
     suspend fun fetchPendingUsers(): List<UserData>
-//    suspend fun fetchApprovedUsers(): List<UserData>
+    suspend fun fetchApprovedUsers(): List<UserData>
 //    suspend fun fetchRejectedUsers(): List<UserData>
 }

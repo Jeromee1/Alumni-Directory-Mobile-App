@@ -1,5 +1,7 @@
 package com.apa.alumnidirectory.data.utils
 
+import com.apa.alumnidirectory.data.enums.Roles
+import com.apa.alumnidirectory.data.enums.Status
 import com.apa.alumnidirectory.data.model.auth.RegisterUserReq
 import com.apa.alumnidirectory.data.model.user.ContactInfo
 import com.apa.alumnidirectory.data.model.user.Location
@@ -11,8 +13,8 @@ fun buildUserData(req: RegisterUserReq, uid: String): UserData {
         req.fullName,
         req.fullName.lowercase(),
         req.email,
-        "pending",
-        "user",
+        Status.PENDING.value,
+        Roles.ALUMNI.value,
         req.graduationYear,
         req.department,
         req.position,
@@ -21,9 +23,10 @@ fun buildUserData(req: RegisterUserReq, uid: String): UserData {
         Location(req.city, req.country),
         req.contactPreference,
         ContactInfo(),
-        req.bio,
-        req.photoUrl,
+        null,
+        null,
+        null,
         req.createdAt,
-        req.approvedAt
+        null
     )
 }
