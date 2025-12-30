@@ -19,6 +19,8 @@ data class UserData(
     val contact: ContactInfo = ContactInfo(),
     val bio: String? = null,
     val photoUrl: String? = null,
+    val createdAt: Long = 0L,
+    val approvedAt: Long? = null
 ) {
     fun toMap(): Map<String, Any> {
         val map = mutableMapOf(
@@ -36,9 +38,11 @@ data class UserData(
             "location" to location.toMap(),
             "preferredContact" to preferredContact,
             "contact" to contact.toMap(),
+            "createdAt" to createdAt
         )
         bio?.let { map["bio"] = it }
         photoUrl?.let { map["photoUrl"] = it }
+        approvedAt?.let { map["approvedAt"] = it }
 
         return map
     }

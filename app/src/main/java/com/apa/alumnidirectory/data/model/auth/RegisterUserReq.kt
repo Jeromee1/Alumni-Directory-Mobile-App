@@ -6,6 +6,7 @@ data class RegisterUserReq(
     val fullName: String = "",
     val email: String = "",
     val password: String = "",
+    val password2: String = "",
     val graduationYear: String = "",
     val department: String = "",
     val position: String = "",
@@ -16,4 +17,6 @@ data class RegisterUserReq(
     val contactPreference: String = PreferredContact.entries.first().value,
     val bio: String? = null,
     val photoUrl: String? = null,
+    val createdAt: Long = System.currentTimeMillis(),
+    val approvedAt: Long? = null
 )

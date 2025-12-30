@@ -1,6 +1,9 @@
 package com.apa.alumnidirectory.data.repo.impls
 
+import android.util.Log
+import com.apa.alumnidirectory.data.model.auth.LoginReq
 import com.apa.alumnidirectory.data.model.auth.RegisterUserReq
+import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.data.repo.AuthRepo
 import com.apa.alumnidirectory.data.utils.buildUserData
 import com.apa.alumnidirectory.service.FirebaseAuthService
@@ -23,4 +26,54 @@ class AuthRepoImpl @Inject constructor(
 
         dbRef.document(userUid).set(userData.toMap()).await()
     }
+
+    override suspend fun login(req: LoginReq): UserData {
+        return authService.login(req.email, req.password).let { user ->
+            Log.d("debug", user.isEmailVerified.toString())
+            dbRef.document(user.uid)
+                .get()
+                .await()
+                .toObject(UserData::class.java)
+                ?: throw IllegalStateException("User doesn't exist")
+        }
+    }
+
+    override suspend fun fetchAllUsers(): List<UserData> {
+        val snapshot = dbRef
+            .get()
+            .await()
+        return snapshot.documents.mapNotNull {
+            it.toObject(UserData::class.java)
+        }
+    }
+
+    override suspend fun fetchPendingUsers(): List<UserData> {
+        val snapshot = dbRef
+            .whereEqualTo("status", "pending")
+            .get()
+            .await()
+        return snapshot.documents.mapNotNull {
+            it.toObject(UserData::class.java)
+        }
+    }
+
+//    override suspend fun fetchApprovedUsers(): List<UserData> {
+//        val snapshot = dbRef
+//            .whereEqualTo("status", "approved")
+//            .get()
+//            .await()
+//        return snapshot.documents.mapNotNull {
+//            it.toObject(UserData::class.java)
+//        }
+//    }
+//
+//    override suspend fun fetchRejectedUsers(): List<UserData> {
+//        val snapshot = dbRef
+//            .whereEqualTo("status", "rejected")
+//            .get()
+//            .await()
+//        return snapshot.documents.mapNotNull {
+//            it.toObject(UserData::class.java)
+//        }
+//    }
 }
