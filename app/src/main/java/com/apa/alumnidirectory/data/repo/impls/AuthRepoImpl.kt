@@ -57,16 +57,16 @@ class AuthRepoImpl @Inject constructor(
         }
     }
 
-//    override suspend fun fetchApprovedUsers(): List<UserData> {
-//        val snapshot = dbRef
-//            .whereEqualTo("status", "approved")
-//            .get()
-//            .await()
-//        return snapshot.documents.mapNotNull {
-//            it.toObject(UserData::class.java)
-//        }
-//    }
-//
+    override suspend fun fetchApprovedUsers(): List<UserData> {
+        val snapshot = dbRef
+            .whereEqualTo("status", "approved")
+            .get()
+            .await()
+        return snapshot.documents.mapNotNull {
+            it.toObject(UserData::class.java)
+        }
+    }
+
 //    override suspend fun fetchRejectedUsers(): List<UserData> {
 //        val snapshot = dbRef
 //            .whereEqualTo("status", "rejected")
