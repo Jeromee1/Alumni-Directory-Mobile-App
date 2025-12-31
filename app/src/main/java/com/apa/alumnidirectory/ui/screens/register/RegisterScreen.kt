@@ -37,7 +37,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.R
 import com.apa.alumnidirectory.data.enums.PreferredContact
-import com.apa.alumnidirectory.data.model.auth.RegisterUserReq
+import com.apa.alumnidirectory.data.model.request.RegisterUserReq
 import com.apa.alumnidirectory.data.model.customtextfield.FieldData
 import com.apa.alumnidirectory.ui.components.inputs.CustomDropdown
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextFieldBox

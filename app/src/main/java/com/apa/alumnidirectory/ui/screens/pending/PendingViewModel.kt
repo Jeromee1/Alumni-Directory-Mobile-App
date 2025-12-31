@@ -2,6 +2,7 @@ package com.apa.alumnidirectory.ui.screens.pending
 
 import androidx.lifecycle.viewModelScope
 import com.apa.alumnidirectory.data.enums.Status
+import com.apa.alumnidirectory.data.model.request.AppealReq
 import com.apa.alumnidirectory.data.model.user.CurrentUser
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.data.repo.AuthRepo
@@ -52,6 +53,22 @@ class PendingViewModel @Inject constructor(
             Status.REJECTED.value -> "Registration Rejected"
             Status.INACTIVE.value -> "Account Deactivated"
             else -> ""
+        }
+    }
+
+    fun submitAppeal() {
+        //This is a test function
+        viewModelScope.launch {
+            _currentUser.value.second?.userData?.let {
+                safeApiCall {
+                    repo.submitAppeal(AppealReq(
+                        uid = it.uid,
+                        name = it.fullName,
+                        email = it.email,
+                        msg = "Appeal Test 2, cause i accidentally screwed everything up"
+                    ))
+                }
+            }
         }
     }
 }

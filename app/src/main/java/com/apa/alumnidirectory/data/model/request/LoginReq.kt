@@ -1,4 +1,4 @@
-package com.apa.alumnidirectory.data.model.auth
+package com.apa.alumnidirectory.data.model.request
 
 data class LoginReq(
     val email: String = "",
