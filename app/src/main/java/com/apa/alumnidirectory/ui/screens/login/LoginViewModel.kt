@@ -1,9 +1,7 @@
 package com.apa.alumnidirectory.ui.screens.login
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.apa.alumnidirectory.data.model.auth.LoginReq
-import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.data.repo.AuthRepo
 import com.apa.alumnidirectory.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +21,6 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             safeApiCall {
                 repo.login(loginReq).let {
-                    Log.d("debug", it.toString())
                     _finish.emit(Unit)
                 }
             }

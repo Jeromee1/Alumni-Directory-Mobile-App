@@ -1,6 +1,5 @@
 package com.apa.alumnidirectory.ui.screens.pending
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.apa.alumnidirectory.data.enums.Status
 import com.apa.alumnidirectory.data.model.user.CurrentUser
@@ -33,7 +32,6 @@ class PendingViewModel @Inject constructor(
                 firebaseAuth.getCurrentUser()?.let { user ->
                     val userData = repo.fetchProfile(user.uid)
                     val msg = fetchMessage(userData)
-                    Log.d("debug PendingVM", "$userData $msg")
                     _currentUser.update {
                         it.copy(
                             first = msg,
