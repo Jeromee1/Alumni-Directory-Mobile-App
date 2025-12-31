@@ -2,7 +2,7 @@ package com.apa.alumnidirectory.data.utils
 
 import com.apa.alumnidirectory.data.enums.Roles
 import com.apa.alumnidirectory.data.enums.Status
-import com.apa.alumnidirectory.data.model.auth.RegisterUserReq
+import com.apa.alumnidirectory.data.model.request.RegisterUserReq
 import com.apa.alumnidirectory.data.model.user.ContactInfo
 import com.apa.alumnidirectory.data.model.user.Location
 import com.apa.alumnidirectory.data.model.user.UserData

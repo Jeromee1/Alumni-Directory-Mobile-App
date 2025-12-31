@@ -1,8 +1,8 @@
 package com.apa.alumnidirectory.data.repo.impls
 
-import android.util.Log
-import com.apa.alumnidirectory.data.model.auth.LoginReq
-import com.apa.alumnidirectory.data.model.auth.RegisterUserReq
+import com.apa.alumnidirectory.data.model.request.AppealReq
+import com.apa.alumnidirectory.data.model.request.LoginReq
+import com.apa.alumnidirectory.data.model.request.RegisterUserReq
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.data.repo.AuthRepo
 import com.apa.alumnidirectory.data.utils.buildUserData
@@ -13,12 +13,17 @@ import kotlinx.coroutines.tasks.await
 
 class AuthRepoImpl @Inject constructor(
     private val authService: FirebaseAuthService,
-    private val firestore: FirebaseFirestore
+     firestore: FirebaseFirestore
 ) : AuthRepo {
     private val dbRef = firestore
         .collection("alumni_directory_db")
         .document("directory")
         .collection("users")
+
+    private val dbAppealRef = firestore
+        .collection("alumni_directory_db")
+        .document("directory")
+        .collection("appeals")
 
     override suspend fun register(user: RegisterUserReq) {
         val userUid = authService.register(user.email, user.password)
@@ -71,6 +76,31 @@ class AuthRepoImpl @Inject constructor(
             .await()
         return snapshot.documents.mapNotNull {
             it.toObject(UserData::class.java)
+        }
+    }
+
+    override suspend fun submitAppeal(appeal: AppealReq) {
+        dbAppealRef.document().set(appeal.toMap()).await()
+    }
+
+    override suspend fun fetchAppeal(): List<AppealReq> {
+        val snapshot = dbAppealRef
+            .get()
+            .await()
+
+        return snapshot.documents.mapNotNull {
+            it.toObject(AppealReq::class.java)
+        }
+    }
+
+    override suspend fun fetchUnresolvedAppeal(): List<AppealReq> {
+        val snapshot = dbAppealRef
+            .whereEqualTo("isResolved", false)
+            .get()
+            .await()
+
+        return snapshot.documents.mapNotNull {
+            it.toObject(AppealReq::class.java)
         }
     }
 

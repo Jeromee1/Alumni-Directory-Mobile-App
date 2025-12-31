@@ -53,14 +53,15 @@ fun PendingScreen(
     }
 
     currentUser.second?.let {
-        Pending(currentUser.first, it.userData)
+        Pending(currentUser.first, it.userData, viewModel::submitAppeal)
     }
 }
 
 @Composable
 fun Pending(
     statusMsg: String,
-    user: UserData
+    user: UserData,
+    submitAppeal: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -175,6 +176,8 @@ fun Pending(
                 shape = RoundedCornerShape(12.dp),
                 onClick = {
                     //Pulls up a modal or something
+                    //Test
+                    submitAppeal()
                 }
             ) {
                 Text(
