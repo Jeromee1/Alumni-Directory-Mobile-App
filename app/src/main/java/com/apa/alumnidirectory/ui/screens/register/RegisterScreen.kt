@@ -139,7 +139,7 @@ fun RegisterScreen(
                 CustomTextFieldBox(
                     categoryName = "Location",
                     fields = listOf(
-                        FieldData("City", state)
+                        FieldData("State", state)
                         { form = copy(state = it) },
                         FieldData("Country", country)
                         { form = copy(country = it) },
