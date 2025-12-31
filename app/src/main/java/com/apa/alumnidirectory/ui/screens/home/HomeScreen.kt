@@ -1,6 +1,5 @@
 package com.apa.alumnidirectory.ui.screens.home
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AdminPanelSettings
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -38,6 +38,7 @@ import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.ui.components.core.HomeUserCard
 import com.apa.alumnidirectory.ui.components.inputs.CustomFilterButton
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextField
+import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.Primary
 import kotlin.String
 
@@ -54,16 +55,15 @@ fun HomeScreen(
     val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val pullState = rememberPullToRefreshState()
 
-    Log.d("debug", users.toString())
-
-
     Home(
         users,
         search,
         refreshing,
         pullState,
         viewModel::refresh,
-        {/*navController.navigate(Screen.Profile)*/ })
+        { navController.navigate(Screen.Dashboard) },
+        {/*navController.navigate(Screen.Profile)*/ }
+    )
     { search = it }
 }
 
@@ -74,6 +74,7 @@ fun Home(
     refreshing: Boolean,
     refreshState: PullToRefreshState,
     onRefresh: () -> Unit,
+    navToDashboard: () -> Unit,
     navToProfile: (String) -> Unit,
     onSearchChange: (String) -> Unit
 ) {
@@ -123,8 +124,24 @@ fun Home(
                 }
             }
         }
+        if(/* Is User an Admin check */ true) {
+            FloatingActionButton(
+                onClick = { navToDashboard },
+                containerColor = Primary,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .size(80.dp)
+                    .padding(8.dp),
+                shape = RoundedCornerShape(100)
+            ) {
+                Icon(
+                    Icons.Outlined.AdminPanelSettings, "",
+                    modifier = Modifier.size(44.dp)
+                )
+            }
+        }
         FloatingActionButton(
-            onClick = { },
+            onClick = { navToProfile },
             containerColor = Primary,
             modifier = Modifier
                 .align(Alignment.BottomEnd)

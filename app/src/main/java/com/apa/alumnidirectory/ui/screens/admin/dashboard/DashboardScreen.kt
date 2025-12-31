@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 
 @Composable
@@ -138,7 +139,7 @@ fun DashboardScreen(
                 horizontalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 Button(
-                    onClick = {  },
+                    onClick = { navController.navigate(Screen.AdminPending) },
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
