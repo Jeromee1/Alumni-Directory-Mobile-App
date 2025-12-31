@@ -1,5 +1,6 @@
 package com.apa.alumnidirectory.data.repo.impls
 
+import com.apa.alumnidirectory.data.enums.Status
 import com.apa.alumnidirectory.data.model.request.AppealReq
 import com.apa.alumnidirectory.data.model.request.LoginReq
 import com.apa.alumnidirectory.data.model.request.RegisterUserReq
@@ -13,7 +14,7 @@ import kotlinx.coroutines.tasks.await
 
 class AuthRepoImpl @Inject constructor(
     private val authService: FirebaseAuthService,
-     firestore: FirebaseFirestore
+    firestore: FirebaseFirestore
 ) : AuthRepo {
     private val dbRef = firestore
         .collection("alumni_directory_db")
@@ -104,6 +105,7 @@ class AuthRepoImpl @Inject constructor(
         }
     }
 
+
 //    override suspend fun fetchRejectedUsers(): List<UserData> {
 //        val snapshot = dbRef
 //            .whereEqualTo("status", "rejected")
@@ -113,4 +115,26 @@ class AuthRepoImpl @Inject constructor(
 //            it.toObject(UserData::class.java)
 //        }
 //    }
+
+    override suspend fun approveUser(uid: String) {
+        dbRef.document(uid)
+            .update(
+                mapOf<String, Any>(
+                    "status" to Status.APPROVED.value,
+                    "approvedAt" to System.currentTimeMillis()
+                )
+            )
+            .await()
+    }
+
+    override suspend fun rejectUser(uid: String, msg: String) {
+        dbRef.document(uid)
+            .update(
+                mapOf<String, Any>(
+                    "status" to Status.REJECTED.value,
+                    "rejectionMsg" to msg
+                )
+            )
+            .await()
+    }
 }

@@ -38,7 +38,7 @@ import androidx.navigation.NavController
 import com.apa.alumnidirectory.R
 import com.apa.alumnidirectory.data.enums.PreferredContact
 import com.apa.alumnidirectory.data.model.request.RegisterUserReq
-import com.apa.alumnidirectory.data.model.customtextfield.FieldData
+import com.apa.alumnidirectory.data.model.ui.FieldData
 import com.apa.alumnidirectory.ui.components.inputs.CustomDropdown
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextFieldBox
 import com.apa.alumnidirectory.ui.theme.SecondaryG
@@ -139,8 +139,8 @@ fun RegisterScreen(
                 CustomTextFieldBox(
                     categoryName = "Location",
                     fields = listOf(
-                        FieldData("City", city)
-                        { form = copy(city = it) },
+                        FieldData("State", state)
+                        { form = copy(state = it) },
                         FieldData("Country", country)
                         { form = copy(country = it) },
                     )

@@ -94,4 +94,6 @@ dependencies {
     ksp("com.google.dagger:hilt-compiler:2.57.2")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
+    implementation("com.google.code.gson:gson:2.10.1")
 }

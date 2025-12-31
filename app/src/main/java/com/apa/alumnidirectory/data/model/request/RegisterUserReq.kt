@@ -12,7 +12,7 @@ data class RegisterUserReq(
     val position: String = "",
     val company: String = "",
     val techStack: String = "",
-    val city: String = "",
+    val state: String = "",
     val country: String = "",
     val contactPreference: String = PreferredContact.entries.first().value,
     val createdAt: Long = System.currentTimeMillis(),

@@ -12,11 +12,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.ui.components.core.AdminPendingUserCard
@@ -24,16 +27,18 @@ import com.apa.alumnidirectory.ui.theme.SecondaryG
 
 @Composable
 fun AdminPendingScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: AdminPendingViewModel = hiltViewModel()
 ) {
-
-//Put users in here \/
-//    AdminPending()
+    val users by viewModel.pendingUsers.collectAsStateWithLifecycle()
+    AdminPending(users, viewModel::approveUser, viewModel::rejectUser)
 }
 
 @Composable
 fun AdminPending(
-    users: List<UserData>
+    users: List<UserData>,
+    onApproveClick: (String) -> Unit,
+    onRejectClick: (String, String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -62,8 +67,11 @@ fun AdminPending(
             items(users) { user ->
                 AdminPendingUserCard(
                     user,
-                    { /* Approve user function */ },
-                    { /* Open Modal */ }
+                    { onApproveClick(user.uid) },
+                    {
+                        //Test function, I need your modal jeremy, here and in pending
+                        onRejectClick(user.uid, "Potato")
+                    }
                 )
             }
         }

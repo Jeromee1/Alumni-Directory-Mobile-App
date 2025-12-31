@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.apa.alumnidirectory.data.model.customtextfield.FieldData
+import com.apa.alumnidirectory.data.model.ui.FieldData
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.ui.components.core.HomeUserCard
 import com.apa.alumnidirectory.ui.components.inputs.CustomFilterButton
@@ -126,7 +126,7 @@ fun Home(
         }
         if(/* Is User an Admin check */ true) {
             FloatingActionButton(
-                onClick = { navToDashboard },
+                onClick = { navToDashboard() },
                 containerColor = Primary,
                 modifier = Modifier
                     .align(Alignment.BottomStart)

@@ -31,7 +31,7 @@ import com.apa.alumnidirectory.ui.theme.Text1
 @Composable
 fun AdminPendingUserCard(
     user: UserData,
-    onApproved: (String) -> Unit,
+    onApproved: () -> Unit,
     onRejected: (String) -> Unit
 ) {
     Card(
@@ -73,7 +73,7 @@ fun AdminPendingUserCard(
                 }
                 Spacer(Modifier.height(12.dp))
                 Text("Email: ${user.email}")
-                Text("Location: ${user.location.city}, ${user.location.country}")
+                Text("Location: ${user.location.state}, ${user.location.country}")
                 Spacer(Modifier.height(12.dp))
                 Text("Job Title: ${user.position}")
                 Text("Company: ${user.company}")
@@ -86,7 +86,7 @@ fun AdminPendingUserCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                    onClick = { onApproved(user.uid) },
+                    onClick = { onApproved() },
                     modifier = Modifier
                         .width(130.dp),
                     colors = ButtonDefaults.buttonColors(

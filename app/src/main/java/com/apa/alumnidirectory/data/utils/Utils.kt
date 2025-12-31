@@ -20,7 +20,7 @@ fun buildUserData(req: RegisterUserReq, uid: String): UserData {
         req.position,
         req.company,
         req.techStack,
-        Location(req.city, req.country),
+        Location(req.state, req.country),
         req.contactPreference,
         ContactInfo(),
         null,
