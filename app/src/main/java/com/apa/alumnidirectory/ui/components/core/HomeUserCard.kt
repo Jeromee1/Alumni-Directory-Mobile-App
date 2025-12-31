@@ -41,7 +41,7 @@ fun HomeUserCard(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                if (user.role == "admin") Color.Red
+                if (user.role == "Admin") Color.Red
                 else Color.Transparent,
                 RoundedCornerShape(12.dp)
             )
@@ -52,8 +52,8 @@ fun HomeUserCard(
                 .background(
                     SecondaryG, RoundedCornerShape(12.dp)
                 )
-                .padding(12.dp)
-                .clickable{ onClick(user.uid) },
+                .clickable{ onClick(user.uid) }
+                .padding(12.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color.Transparent,
                 contentColor = Text1
@@ -132,7 +132,7 @@ fun HomeUserCard(
                         Modifier.height(20.dp)
                     )
                     Text(
-                        "${user.location.city}, ${user.location.country}",
+                        "${user.location.state}, ${user.location.country}",
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis

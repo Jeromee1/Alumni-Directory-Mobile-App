@@ -55,7 +55,7 @@ fun AdminPending(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                "Pending Users",
+                "Pending Users: {Amount here}",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
