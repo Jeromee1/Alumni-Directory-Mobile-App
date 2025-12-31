@@ -1,6 +1,7 @@
 package com.apa.alumnidirectory.ui.components.core
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,14 +34,14 @@ import com.apa.alumnidirectory.ui.theme.Text1
 
 @Composable
 fun HomeUserCard(
-    data: UserData,
-    onClick: (Int) -> Unit
+    user: UserData,
+    onClick: (String) -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                if (data.role == "admin") Color.Red
+                if (user.role == "admin") Color.Red
                 else Color.Transparent,
                 RoundedCornerShape(12.dp)
             )
@@ -51,7 +52,8 @@ fun HomeUserCard(
                 .background(
                     SecondaryG, RoundedCornerShape(12.dp)
                 )
-                .padding(12.dp),
+                .padding(12.dp)
+                .clickable{ onClick(user.uid) },
             colors = CardDefaults.cardColors(
                 containerColor = Color.Transparent,
                 contentColor = Text1
@@ -85,7 +87,7 @@ fun HomeUserCard(
                         )
                     }
                     Text(
-                        data.graduationYear,
+                        user.graduationYear,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -99,7 +101,7 @@ fun HomeUserCard(
                             .fillMaxSize(),
                     ) {
                         Text(
-                            data.fullName,
+                            user.fullName,
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(0.dp),
@@ -108,19 +110,19 @@ fun HomeUserCard(
                         )
                         Spacer(Modifier.height(6.dp))
                         Text(
-                            data.position,
+                            user.position,
                             fontSize = 15.sp,
                             lineHeight = 15.sp,
                             maxLines = 1
                         )
                         Text(
-                            data.company,
+                            user.company,
                             fontSize = 15.sp,
                             lineHeight = 15.sp,
                             maxLines = 1
                         )
                         Text(
-                            data.primaryStack,
+                            user.primaryStack,
                             fontSize = 15.sp,
                             lineHeight = 15.sp,
                             maxLines = 1
@@ -130,7 +132,7 @@ fun HomeUserCard(
                         Modifier.height(20.dp)
                     )
                     Text(
-                        "${data.location.city}, ${data.location.country}",
+                        "${user.location.city}, ${user.location.country}",
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis

@@ -16,6 +16,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.apa.alumnidirectory.ui.components.core.CustomTopBar
+import com.apa.alumnidirectory.ui.screens.admin.dashboard.DashboardScreen
+import com.apa.alumnidirectory.ui.screens.admin.pending.AdminPendingScreen
 import com.apa.alumnidirectory.ui.screens.home.HomeScreen
 import com.apa.alumnidirectory.ui.screens.login.LoginScreen
 import com.apa.alumnidirectory.ui.screens.pending.PendingScreen
@@ -61,10 +63,12 @@ fun AppNav(modifier: Modifier = Modifier) {
 
 @Composable
 fun Nav(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.Login) {
+    NavHost(navController = navController, startDestination = Screen.Dashboard) {
         composable<Screen.Home> { HomeScreen(navController) }
         composable<Screen.Login> { LoginScreen(navController) }
         composable<Screen.Register> { RegisterScreen(navController) }
         composable<Screen.Pending> { PendingScreen(navController) }
+        composable<Screen.Dashboard> { DashboardScreen(navController) }
+        composable<Screen.AdminPending> { AdminPendingScreen(navController) }
     }
 }

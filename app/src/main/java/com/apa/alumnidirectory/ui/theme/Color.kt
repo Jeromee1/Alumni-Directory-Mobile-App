@@ -17,6 +17,8 @@ val SecondaryG = Brush.linearGradient(
     )
 )
 
+val Danger = Color(235, 67, 67)
+
 val Background = Brush.linearGradient(
     colors = listOf(
         Color(29, 48, 89),
