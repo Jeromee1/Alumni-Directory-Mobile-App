@@ -1,11 +1,11 @@
 package com.apa.alumnidirectory.data.model.user
 
 data class Location(
-    val city: String = "",
+    val state: String = "",
     val country: String = ""
 ) {
     fun toMap() = mapOf(
-        "city" to city,
+        "state" to state,
         "country" to country
     )
 }

@@ -1,4 +1,4 @@
-package com.apa.alumnidirectory.data.model.customtextfield
+package com.apa.alumnidirectory.data.model.ui
 
 data class FieldData(
     val label: String,

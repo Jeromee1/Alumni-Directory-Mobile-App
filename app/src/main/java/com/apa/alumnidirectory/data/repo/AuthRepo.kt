@@ -21,4 +21,6 @@ interface AuthRepo {
     suspend fun submitAppeal(appeal: AppealReq)
     suspend fun fetchAppeal(): List<AppealReq>
     suspend fun fetchUnresolvedAppeal(): List<AppealReq>
+    suspend fun approveUser(uid: String)
+    suspend fun rejectUser(uid: String, msg: String)
 }
