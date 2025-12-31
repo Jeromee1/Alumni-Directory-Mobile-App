@@ -16,20 +16,25 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 
 @Composable
 fun DashboardScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: DashboardViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,7 +77,9 @@ fun DashboardScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("25", fontSize = 40.sp, fontWeight = FontWeight.Bold)
+                        Text("${uiState.approvedCount}",
+                            fontSize = 40.sp,
+                            fontWeight = FontWeight.Bold)
                         Text("Total", fontWeight = FontWeight.Bold)
                     }
                     VerticalDivider(
@@ -86,7 +93,9 @@ fun DashboardScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("5", fontSize = 40.sp, fontWeight = FontWeight.Bold)
+                        Text("${uiState.recentApprovedCount}",
+                            fontSize = 40.sp,
+                            fontWeight = FontWeight.Bold)
                         Text("Recent", fontWeight = FontWeight.Bold)
                     }
                 }
@@ -106,7 +115,9 @@ fun DashboardScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("6", fontSize = 40.sp, fontWeight = FontWeight.Bold)
+                        Text("${uiState.pendingCount}",
+                            fontSize = 40.sp,
+                            fontWeight = FontWeight.Bold)
                         Text("Pending", fontWeight = FontWeight.Bold)
                     }
                     VerticalDivider(
@@ -120,7 +131,9 @@ fun DashboardScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("2", fontSize = 40.sp, fontWeight = FontWeight.Bold)
+                        Text("${uiState.appealCount}",
+                            fontSize = 40.sp,
+                            fontWeight = FontWeight.Bold)
                         Text("Appeals", fontWeight = FontWeight.Bold)
                     }
                 }
