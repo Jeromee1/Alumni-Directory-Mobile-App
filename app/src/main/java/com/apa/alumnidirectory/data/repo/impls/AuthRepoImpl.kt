@@ -29,13 +29,20 @@ class AuthRepoImpl @Inject constructor(
 
     override suspend fun login(req: LoginReq): UserData {
         return authService.login(req.email, req.password).let { user ->
-            Log.d("debug", user.isEmailVerified.toString())
             dbRef.document(user.uid)
                 .get()
                 .await()
                 .toObject(UserData::class.java)
                 ?: throw IllegalStateException("User doesn't exist")
         }
+    }
+
+    override suspend fun fetchProfile(uid: String): UserData {
+        return dbRef.document(uid)
+            .get()
+            .await()
+            .toObject(UserData::class.java)
+            ?: throw java.lang.IllegalStateException("User doesn't exist")
     }
 
     override suspend fun fetchAllUsers(): List<UserData> {
