@@ -141,7 +141,7 @@ fun Home(
             }
         }
         FloatingActionButton(
-            onClick = { navToProfile },
+            onClick = { /* Nav to profile(self) */ },
             containerColor = Primary,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
