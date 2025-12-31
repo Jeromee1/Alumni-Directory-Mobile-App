@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -53,16 +54,17 @@ fun AppNav(modifier: Modifier = Modifier) {
                 )
             }
 
-            NavHost(
-                navController = navController,
-                startDestination = Screen.Pending,
-                modifier = modifier
-            ) {
-                composable<Screen.Home> { HomeScreen(navController) }
-                composable<Screen.Login> { LoginScreen(navController) }
-                composable<Screen.Register> { RegisterScreen(navController) }
-                composable<Screen.Pending> { PendingScreen(navController) }
-            }
+            Nav(navController)
         }
+    }
+}
+
+@Composable
+fun Nav(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = Screen.Login) {
+        composable<Screen.Home> { HomeScreen(navController) }
+        composable<Screen.Login> { LoginScreen(navController) }
+        composable<Screen.Register> { RegisterScreen(navController) }
+        composable<Screen.Pending> { PendingScreen(navController) }
     }
 }

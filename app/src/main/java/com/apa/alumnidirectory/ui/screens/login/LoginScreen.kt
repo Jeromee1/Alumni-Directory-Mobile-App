@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.R
-import com.apa.alumnidirectory.data.model.auth.LoginReq
+import com.apa.alumnidirectory.data.model.request.LoginReq
 import com.apa.alumnidirectory.data.model.customtextfield.FieldData
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextFieldBox
 import com.apa.alumnidirectory.ui.nav.Screen
@@ -39,6 +40,12 @@ fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.finish.collect {
+            navController.navigate(Screen.Pending)
+        }
+    }
+
     var form by remember { mutableStateOf(LoginReq()) }
 
     Box(

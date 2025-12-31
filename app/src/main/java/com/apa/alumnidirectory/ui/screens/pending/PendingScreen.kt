@@ -21,30 +21,47 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.apa.alumnidirectory.data.enums.Status
+import com.apa.alumnidirectory.data.model.user.UserData
+import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.Primary
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 
 @Composable
 fun PendingScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: PendingViewModel = hiltViewModel()
 ) {
-//    if user approved then just navigate else
-//       \/
-//    Pending()
+    val currentUser = viewModel.currentUser.collectAsStateWithLifecycle().value
+
+    LaunchedEffect(currentUser) {
+        val status = currentUser.second?.userData?.status
+        if (status == Status.APPROVED.value) {
+            navController.navigate(Screen.Home) {
+                popUpTo(Screen.Pending) { inclusive = true }
+            }
+        }
+    }
+
+    currentUser.second?.let {
+        Pending(currentUser.first, it.userData, viewModel::submitAppeal)
+    }
 }
 
 @Composable
 fun Pending(
-    status: String,
     statusMsg: String,
-    msg: String = "",
-//    data: UserData
+    user: UserData,
+    submitAppeal: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -57,7 +74,7 @@ fun Pending(
                 .padding(0.dp, 120.dp, 0.dp, 0.dp),
             contentAlignment = Alignment.Center
         ) {
-            when(status) {
+            when (user.status) {
                 "pending" -> {
                     CircularProgressIndicator(
                         modifier = Modifier.size(60.dp),
@@ -65,6 +82,7 @@ fun Pending(
                         strokeWidth = 6.dp
                     )
                 }
+
                 "rejected" -> {
                     Icon(
                         Icons.Outlined.Cancel,
@@ -72,6 +90,7 @@ fun Pending(
                         modifier = Modifier.size(120.dp)
                     )
                 }
+
                 "inactive" -> {
                     Icon(
                         Icons.Default.WarningAmber,
@@ -89,7 +108,7 @@ fun Pending(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                 statusMsg,
+                statusMsg,
                 fontSize = 36.sp
             )
             Box(
@@ -102,23 +121,22 @@ fun Pending(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(20.dp)
-                    ,
+                        .padding(20.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "data.fullname here",
+                        user.fullName,
                         fontSize = 24.sp
                     )
                     Text(
-                        "data.email here",
+                        user.email,
                         fontSize = 24.sp
                     )
-                    Spacer(Modifier.height(12.dp))
-                    if(msg.isNotBlank()) {
+                    user.rejectionMsg?.let {
+                        Spacer(Modifier.height(12.dp))
                         Text(
-                            msg,
+                            it,
                             fontSize = 18.sp
                         )
                     }
@@ -158,6 +176,8 @@ fun Pending(
                 shape = RoundedCornerShape(12.dp),
                 onClick = {
                     //Pulls up a modal or something
+                    //Test
+                    submitAppeal()
                 }
             ) {
                 Text(
@@ -169,3 +189,4 @@ fun Pending(
         }
     }
 }
+

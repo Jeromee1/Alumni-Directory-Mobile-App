@@ -1,4 +1,4 @@
-package com.apa.alumnidirectory.data.model.auth
+package com.apa.alumnidirectory.data.model.request
 
 import com.apa.alumnidirectory.data.enums.PreferredContact
 
