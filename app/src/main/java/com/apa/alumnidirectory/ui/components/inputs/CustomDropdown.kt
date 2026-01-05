@@ -31,7 +31,7 @@ fun CustomDropdown(
 
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded },
+        onExpandedChange = { if (items.isNotEmpty()) expanded = !expanded },
     ) {
         OutlinedTextField(
             value = selectedItem,
@@ -39,8 +39,8 @@ fun CustomDropdown(
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White
+                focusedTextColor = if (items.isNotEmpty()) Color.White else Color.Gray,
+                unfocusedTextColor = if (items.isNotEmpty()) Color.White else Color.Gray
             ),
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
