@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,6 +49,11 @@ fun RegisterScreen(
     navController: NavController,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
+    val countryNames by remember { mutableStateOf(viewModel.countries.map { it.name }) }
+    val selectedCountry by viewModel.selectedCountry.collectAsState()
+    val selectedState by viewModel.selectedState.collectAsState()
+    val states by viewModel.availableStates.collectAsState()
+
     var form by remember { mutableStateOf(RegisterUserReq()) }
     val scrollState = rememberScrollState()
 
@@ -136,15 +142,43 @@ fun RegisterScreen(
                     )
                 )
 
-                CustomTextFieldBox(
-                    categoryName = "Location",
-                    fields = listOf(
-                        FieldData("State", state)
-                        { form = copy(state = it) },
-                        FieldData("Country", country)
-                        { form = copy(country = it) },
-                    )
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(28.dp, 16.dp)
+                        .shadow(4.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(SecondaryG, RoundedCornerShape(12.dp))
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Text(
+                            text = "Location",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        CustomDropdown(
+                            items = countryNames,
+                            selectedItem = selectedCountry?.name ?: "Select a Country",
+                            onSelectedChange = { countryName ->
+                                viewModel.onCountrySelected(viewModel
+                                    .countries.first { it.name == countryName })
+                            }
+                        )
+                        CustomDropdown(
+                            items = states.map { it.name },
+                            selectedItem = selectedState?.name ?: "Select a State",
+                            onSelectedChange = { stateName ->
+                                viewModel.onStateSelected(states.first { it.name == stateName })
+                            }
+                        )
+                    }
+                }
+
 
                 Box(
                     modifier = Modifier
