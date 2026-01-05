@@ -132,7 +132,7 @@ fun HomeUserCard(
                         Modifier.height(20.dp)
                     )
                     Text(
-                        "${user.location.city}, ${user.location.country}",
+                        "${user.location.state}, ${user.location.country}",
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis

@@ -29,10 +29,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.apa.alumnidirectory.data.enums.Roles
 import com.apa.alumnidirectory.data.model.ui.FieldData
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.ui.components.core.HomeUserCard
@@ -48,27 +50,29 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val users by viewModel.userList.collectAsStateWithLifecycle()
-
-    var search by remember { mutableStateOf("") }
+    val user by viewModel.currentUser.collectAsStateWithLifecycle()
+    val search by viewModel.searchQuery.collectAsStateWithLifecycle()
 
     //Refreshing code
     val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val pullState = rememberPullToRefreshState()
 
     Home(
+        user,
         users,
         search,
         refreshing,
         pullState,
         viewModel::refresh,
         { navController.navigate(Screen.Dashboard) },
-        {/*navController.navigate(Screen.Profile)*/ }
+        {/*navController.navigate(Screen.Profile)*/ },
+        viewModel::onSearchChange
     )
-    { search = it }
 }
 
 @Composable
 fun Home(
+    user: UserData?,
     users: List<UserData>,
     search: String,
     refreshing: Boolean,
@@ -124,20 +128,22 @@ fun Home(
                 }
             }
         }
-        if(/* Is User an Admin check */ true) {
-            FloatingActionButton(
-                onClick = { navToDashboard() },
-                containerColor = Primary,
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .size(80.dp)
-                    .padding(8.dp),
-                shape = RoundedCornerShape(100)
-            ) {
-                Icon(
-                    Icons.Outlined.AdminPanelSettings, "",
-                    modifier = Modifier.size(44.dp)
-                )
+        user?.let {
+            if (user.role == Roles.ADMIN.value) {
+                FloatingActionButton(
+                    onClick = { navToDashboard() },
+                    containerColor = Primary,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .size(80.dp)
+                        .padding(8.dp),
+                    shape = RoundedCornerShape(100)
+                ) {
+                    Icon(
+                        Icons.Outlined.AdminPanelSettings, "",
+                        modifier = Modifier.size(44.dp)
+                    )
+                }
             }
         }
         FloatingActionButton(
