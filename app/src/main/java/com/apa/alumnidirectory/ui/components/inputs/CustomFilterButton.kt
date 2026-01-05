@@ -23,11 +23,11 @@ import com.apa.alumnidirectory.ui.theme.Primary
 
 @Composable
 fun CustomFilterButton(
-    onClicked: (Unit) -> Unit
+    onClick: () -> Unit
 ) {
     Button(
         modifier = Modifier.fillMaxSize(),
-        onClick = { onClicked },
+        onClick = { onClick() },
         colors = ButtonDefaults.buttonColors(
             containerColor = Primary
         ),
