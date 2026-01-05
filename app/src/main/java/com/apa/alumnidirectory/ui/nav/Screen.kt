@@ -11,4 +11,6 @@ sealed class Screen {
     @Serializable object Dashboard: Screen()
     @Serializable object AdminPending: Screen()
     @Serializable object AdminManage: Screen()
+    @Serializable object AdminAppeals: Screen()
+    @Serializable object AdminAppealsDetails: Screen()
 }
