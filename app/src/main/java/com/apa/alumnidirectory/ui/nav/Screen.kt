@@ -10,4 +10,5 @@ sealed class Screen {
     @Serializable object Pending: Screen()
     @Serializable object Dashboard: Screen()
     @Serializable object AdminPending: Screen()
+    @Serializable object AdminManage: Screen()
 }
