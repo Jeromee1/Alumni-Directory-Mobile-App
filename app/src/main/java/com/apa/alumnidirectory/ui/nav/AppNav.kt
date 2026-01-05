@@ -16,6 +16,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.apa.alumnidirectory.ui.components.core.CustomTopBar
+import com.apa.alumnidirectory.ui.screens.admin.appeals.AdminAppealsDetailsScreen
+import com.apa.alumnidirectory.ui.screens.admin.appeals.AdminAppealsScreen
 import com.apa.alumnidirectory.ui.screens.admin.dashboard.DashboardScreen
 import com.apa.alumnidirectory.ui.screens.admin.manage.AdminManageScreen
 import com.apa.alumnidirectory.ui.screens.admin.pending.AdminPendingScreen
@@ -27,7 +29,7 @@ import com.apa.alumnidirectory.ui.theme.Background
 import com.apa.alumnidirectory.ui.theme.Text1
 
 @Composable
-fun AppNav(modifier: Modifier = Modifier) {
+fun AppNav() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val dest = navBackStackEntry?.destination
@@ -64,7 +66,7 @@ fun AppNav(modifier: Modifier = Modifier) {
 
 @Composable
 fun Nav(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.AdminManage) {
+    NavHost(navController = navController, startDestination = Screen.AdminAppeals) {
         composable<Screen.Home> { HomeScreen(navController) }
         composable<Screen.Login> { LoginScreen(navController) }
         composable<Screen.Register> { RegisterScreen(navController) }
@@ -72,5 +74,7 @@ fun Nav(navController: NavHostController) {
         composable<Screen.Dashboard> { DashboardScreen(navController) }
         composable<Screen.AdminPending> { AdminPendingScreen(navController) }
         composable<Screen.AdminManage> { AdminManageScreen(navController) }
+        composable<Screen.AdminAppeals> { AdminAppealsScreen(navController) }
+        composable<Screen.AdminAppealsDetails> { AdminAppealsDetailsScreen(navController) }
     }
 }

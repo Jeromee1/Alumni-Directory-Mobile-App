@@ -32,7 +32,7 @@ import com.apa.alumnidirectory.ui.theme.Text1
 fun AdminPendingUserCard(
     user: UserData,
     onApproved: () -> Unit,
-    onRejected: (String) -> Unit
+    onRejected: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -100,7 +100,7 @@ fun AdminPendingUserCard(
                     )
                 }
                 Button(
-                    onClick = { onRejected(user.uid) },
+                    onClick = { onRejected() },
                     modifier = Modifier
                         .width(130.dp)
                         .padding(6.dp),
