@@ -7,6 +7,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -39,8 +40,10 @@ fun CustomDropdown(
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = if (items.isNotEmpty()) Color.White else Color.Gray,
-                unfocusedTextColor = if (items.isNotEmpty()) Color.White else Color.Gray
+                focusedTextColor = if (items.isNotEmpty()) Color.Black else Color.Gray,
+                unfocusedTextColor = if (items.isNotEmpty()) Color.Black else Color.Gray,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White
             ),
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
@@ -59,8 +62,10 @@ fun CustomDropdown(
                     onClick = {
                         onSelectedChange(item)
                         expanded = false
-                    }
+                    },
+                    modifier = Modifier.background(Color.White)
                 )
+                HorizontalDivider(thickness = 1.dp)
             }
         }
     }

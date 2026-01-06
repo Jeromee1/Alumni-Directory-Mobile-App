@@ -17,19 +17,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AdminPanelSettings
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -37,18 +39,25 @@ import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.enums.Roles
 import com.apa.alumnidirectory.data.model.ui.FieldData
 import com.apa.alumnidirectory.data.model.user.UserData
+import com.apa.alumnidirectory.data.utils.generateGradYears
+import com.apa.alumnidirectory.ui.components.bottomsheet.CustomBottomSheet
+import com.apa.alumnidirectory.ui.components.bottomsheet.filter.FilterSheetContent
 import com.apa.alumnidirectory.ui.components.core.HomeUserCard
 import com.apa.alumnidirectory.ui.components.inputs.CustomFilterButton
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextField
 import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.Primary
+import kotlinx.coroutines.launch
 import kotlin.String
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val scope = rememberCoroutineScope()
+
     val users by viewModel.userList.collectAsStateWithLifecycle()
     val user by viewModel.currentUser.collectAsStateWithLifecycle()
     val search by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -56,6 +65,8 @@ fun HomeScreen(
     //Refreshing code
     val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val pullState = rememberPullToRefreshState()
+
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     Home(
         user,
@@ -66,8 +77,39 @@ fun HomeScreen(
         viewModel::refresh,
         { navController.navigate(Screen.Dashboard) },
         {/*navController.navigate(Screen.Profile)*/ },
+        { scope.launch { bottomSheetState.show() } },
         viewModel::onSearchChange
     )
+
+    val years = generateGradYears().map { it.toString() }
+    val tempList = listOf("Hello", "World")
+
+    var selectedTechStack by remember { mutableStateOf(tempList.first()) }
+    var selectedCountry by remember { mutableStateOf(tempList.first()) }
+    var selectedState by remember { mutableStateOf(tempList.first()) }
+    var selectedYear by remember { mutableStateOf(years.first()) }
+
+    CustomBottomSheet(
+        bottomSheetState,
+        { scope.launch { bottomSheetState.hide() } }
+    ) {
+        FilterSheetContent(
+            filterOnSelected = {  },
+            sortOnSelected = {  },
+            techStackOnSelected = { selectedTechStack = it },
+            techStack = tempList,
+            selectedTechStack = selectedTechStack,
+            countryOnSelected = { selectedCountry = it },
+            country = tempList,
+            selectedCountry = selectedCountry,
+            stateOnSelected = { selectedState = it },
+            state = tempList,
+            selectedState = selectedState,
+            yearsOnSelected = { selectedYear = it },
+            years = years,
+            selectedYear = selectedYear,
+        )
+    }
 }
 
 @Composable
@@ -80,6 +122,7 @@ fun Home(
     onRefresh: () -> Unit,
     navToDashboard: () -> Unit,
     navToProfile: (String) -> Unit,
+    openBottomSheet: () -> Unit,
     onSearchChange: (String) -> Unit
 ) {
     Box(
@@ -109,7 +152,7 @@ fun Home(
                         .weight(0.3f)
                         .fillMaxHeight()
                 ) {
-                    CustomFilterButton { }
+                    CustomFilterButton { openBottomSheet() }
                 }
             }
             PullToRefreshBox(

@@ -66,7 +66,7 @@ fun AppNav() {
 
 @Composable
 fun Nav(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.AdminAppeals) {
+    NavHost(navController = navController, startDestination = Screen.Home) {
         composable<Screen.Home> { HomeScreen(navController) }
         composable<Screen.Login> { LoginScreen(navController) }
         composable<Screen.Register> { RegisterScreen(navController) }
