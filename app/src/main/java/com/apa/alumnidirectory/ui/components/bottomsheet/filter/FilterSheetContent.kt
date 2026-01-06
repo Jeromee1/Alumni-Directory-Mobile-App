@@ -11,6 +11,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,13 +29,22 @@ import com.apa.alumnidirectory.ui.components.inputs.CustomDropdown
 fun FilterSheetContent(
     filterOnSelected: (String) -> Unit,
     sortOnSelected: (String) -> Unit,
+    techStackOnSelected: (String) -> Unit,
+    techStack: List<String>,
+    selectedTechStack: String,
     countryOnSelected: (String) -> Unit,
     country: List<String>,
+    selectedCountry: String,
     stateOnSelected: (String) -> Unit,
     state: List<String>,
+    selectedState: String,
     yearsOnSelected: (String) -> Unit,
-    years: List<String>
+    years: List<String>,
+    selectedYear: String
 ) {
+    var selectedFilter by remember { mutableStateOf(Filter.entries.first().value) }
+    var selectedSort by remember { mutableStateOf(Sort.entries.first().value) }
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -45,11 +58,39 @@ fun FilterSheetContent(
         )
         CustomDropdown(
             Filter.entries.map { it.value },
-            Filter.entries.first().value, //TEMPORARY
-        ) { filterOnSelected(it) }
+            selectedFilter,
+        ) {
+            filterOnSelected(it)
+            selectedFilter = it
+        }
+    }
+    //Tech Stack
+    if(selectedFilter == Filter.TECH_STACK.value) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "Tech Stack",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                CustomDropdown(
+                    techStack,
+                    selectedTechStack
+                ) { techStackOnSelected(it) }
+            }
+        }
     }
     //Location
-    if(/* SElected is location*/ false) {
+    if(selectedFilter == Filter.LOCATION.value) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(20.dp),
@@ -62,13 +103,13 @@ fun FilterSheetContent(
             ) {
                 Text(
                     "Country",
-                    fontSize = 22.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
                 CustomDropdown(
                     country,
-                    country.first() //TEMPORARY
+                    selectedCountry
                 ) { countryOnSelected(it) }
             }
             Column(
@@ -78,19 +119,19 @@ fun FilterSheetContent(
             ) {
                 Text(
                     "State",
-                    fontSize = 22.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
                 CustomDropdown(
                     state,
-                    state.first()//TEMPORARY
+                    selectedState
                 ) { stateOnSelected(it) }
             }
         }
     }
     //Year
-    if(/* Selected is graduation year*/ false) {
+    if(selectedFilter == Filter.GRADUATION_YEAR.value) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
@@ -103,13 +144,13 @@ fun FilterSheetContent(
             ) {
                 Text(
                     "Year",
-                    fontSize = 22.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
                 CustomDropdown(
                     years,
-                    years.first() //TEMPORARY
+                    selectedYear
                 ) { yearsOnSelected(it) }
             }
         }
@@ -128,8 +169,11 @@ fun FilterSheetContent(
         )
         CustomDropdown(
             Sort.entries.map { it.value },
-            Sort.entries.first().value, //TEMPORARY
-        ) { sortOnSelected(it) }
+            selectedSort,
+        ) {
+            sortOnSelected(it)
+            selectedSort = it
+        }
     }
     Spacer(Modifier.height(60.dp))
     Button(

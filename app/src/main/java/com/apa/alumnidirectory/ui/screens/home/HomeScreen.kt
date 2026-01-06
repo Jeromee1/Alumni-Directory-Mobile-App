@@ -26,7 +26,10 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -79,7 +82,12 @@ fun HomeScreen(
     )
 
     val years = generateGradYears().map { it.toString() }
-    val temp = listOf("Hello", "World")
+    val tempList = listOf("Hello", "World")
+
+    var selectedTechStack by remember { mutableStateOf(tempList.first()) }
+    var selectedCountry by remember { mutableStateOf(tempList.first()) }
+    var selectedState by remember { mutableStateOf(tempList.first()) }
+    var selectedYear by remember { mutableStateOf(years.first()) }
 
     CustomBottomSheet(
         bottomSheetState,
@@ -88,12 +96,18 @@ fun HomeScreen(
         FilterSheetContent(
             filterOnSelected = {  },
             sortOnSelected = {  },
-            countryOnSelected = {  },
-            country = temp,
-            stateOnSelected = {  },
-            state = temp,
-            yearsOnSelected = {  },
-            years = years
+            techStackOnSelected = { selectedTechStack = it },
+            techStack = tempList,
+            selectedTechStack = selectedTechStack,
+            countryOnSelected = { selectedCountry = it },
+            country = tempList,
+            selectedCountry = selectedCountry,
+            stateOnSelected = { selectedState = it },
+            state = tempList,
+            selectedState = selectedState,
+            yearsOnSelected = { selectedYear = it },
+            years = years,
+            selectedYear = selectedYear,
         )
     }
 }
