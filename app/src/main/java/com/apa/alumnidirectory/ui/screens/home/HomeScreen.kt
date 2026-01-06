@@ -20,20 +20,15 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,7 +36,9 @@ import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.enums.Roles
 import com.apa.alumnidirectory.data.model.ui.FieldData
 import com.apa.alumnidirectory.data.model.user.UserData
+import com.apa.alumnidirectory.data.utils.generateGradYears
 import com.apa.alumnidirectory.ui.components.bottomsheet.CustomBottomSheet
+import com.apa.alumnidirectory.ui.components.bottomsheet.filter.FilterSheetContent
 import com.apa.alumnidirectory.ui.components.core.HomeUserCard
 import com.apa.alumnidirectory.ui.components.inputs.CustomFilterButton
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextField
@@ -77,14 +74,28 @@ fun HomeScreen(
         viewModel::refresh,
         { navController.navigate(Screen.Dashboard) },
         {/*navController.navigate(Screen.Profile)*/ },
-        { scope.launch { bottomSheetState.show() } }
-        {/*navController.navigate(Screen.Profile)*/ },
+        { scope.launch { bottomSheetState.show() } },
         viewModel::onSearchChange
     )
 
+    val years = generateGradYears().map { it.toString() }
+    val temp = listOf("Hello", "World")
+
     CustomBottomSheet(
         bottomSheetState,
-    ) { scope.launch { bottomSheetState.hide() } }
+        { scope.launch { bottomSheetState.hide() } }
+    ) {
+        FilterSheetContent(
+            filterOnSelected = {  },
+            sortOnSelected = {  },
+            countryOnSelected = {  },
+            country = temp,
+            stateOnSelected = {  },
+            state = temp,
+            yearsOnSelected = {  },
+            years = years
+        )
+    }
 }
 
 @Composable

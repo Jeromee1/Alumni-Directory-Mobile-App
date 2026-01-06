@@ -63,7 +63,7 @@ fun generateGradYears(
 ): List<Int> {
     val now = Calendar.getInstance()
     val currentYear = now.get(Calendar.YEAR)
-    val currentMonth = now.get(Calendar.MONTH) + 1
+    val currentMonth = now.get(Calendar.MONTH)
 
     val latestYear = if (currentMonth >= gradMonth) currentYear else currentYear - 1
 
