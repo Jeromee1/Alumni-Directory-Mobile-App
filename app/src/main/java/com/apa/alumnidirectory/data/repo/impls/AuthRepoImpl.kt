@@ -81,10 +81,12 @@ class AuthRepoImpl @Inject constructor(
     }
 
     override suspend fun submitAppeal(appeal: AppealReq) {
-        dbAppealRef.document().set(appeal.toMap()).await()
+        val ref = dbAppealRef.document()
+        val newAppeal = appeal.copy(uid = ref.id)
+        ref.set(newAppeal.toMap()).await()
     }
 
-    override suspend fun fetchAppeal(): List<AppealReq> {
+    override suspend fun fetchAppeals(): List<AppealReq> {
         val snapshot = dbAppealRef
             .get()
             .await()
@@ -103,6 +105,23 @@ class AuthRepoImpl @Inject constructor(
         return snapshot.documents.mapNotNull {
             it.toObject(AppealReq::class.java)
         }
+    }
+
+    override suspend fun fetchAppealById(uid: String): AppealReq {
+        return dbAppealRef.document(uid)
+            .get()
+            .await()
+            .toObject(AppealReq::class.java)
+            ?: throw java.lang.IllegalStateException("Appeal doesn't exist")
+    }
+
+    override suspend fun resolveAppeal(uid: String) {
+        dbAppealRef.document(uid)
+            .update(
+                mapOf<String, Any>(
+                    "resolved" to true
+                )
+            )
     }
 
 
@@ -128,13 +147,23 @@ class AuthRepoImpl @Inject constructor(
     }
 
     override suspend fun rejectUser(uid: String, msg: String) {
-        dbRef.document(uid)
-            .update(
-                mapOf<String, Any>(
-                    "status" to Status.REJECTED.value,
-                    "rejectionMsg" to msg
+        if (msg.isBlank()) {
+            dbRef.document(uid)
+                .update(
+                    mapOf<String, Any>(
+                        "status" to Status.REJECTED.value,
+                    )
                 )
-            )
-            .await()
+                .await()
+        } else {
+            dbRef.document(uid)
+                .update(
+                    mapOf<String, Any>(
+                        "status" to Status.REJECTED.value,
+                        "rejectionMsg" to msg
+                    )
+                )
+                .await()
+        }
     }
 }
