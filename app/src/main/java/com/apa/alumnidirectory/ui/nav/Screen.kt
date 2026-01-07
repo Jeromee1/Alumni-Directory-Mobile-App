@@ -13,4 +13,5 @@ sealed class Screen {
     @Serializable object AdminManage: Screen()
     @Serializable object AdminAppeals: Screen()
     @Serializable object AdminAppealsDetails: Screen()
+    @Serializable object Profile: Screen()
 }

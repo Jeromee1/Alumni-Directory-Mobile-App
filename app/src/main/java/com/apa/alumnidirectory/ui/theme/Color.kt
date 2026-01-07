@@ -31,3 +31,10 @@ val Background = Brush.linearGradient(
 val Background1 = Color(29, 48, 89)
 
 val Background2 = Color(18, 33, 66)
+
+//Contact
+val Phone = Color(50, 165, 200, 255)
+val Email = Color(185, 80, 80)
+val Github = Color(0, 0, 0)
+val LinkedIn = Color(44, 116, 176)
+val Website = Color(120, 120, 120)
