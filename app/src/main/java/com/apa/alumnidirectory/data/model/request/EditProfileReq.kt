@@ -22,7 +22,7 @@ data class EditProfileReq (
     val preferredContact: String = PreferredContact.EMAIL.value,
     val contact: ContactInfo = ContactInfo(),
     val bio: String? = null,
-    val photoUrl: Int? = null,
+    val photoUrl: Int = 0,
     val rejectionMsg: String? = null,
     val createdAt: Long = 0L,
     val approvedAt: Long? = null

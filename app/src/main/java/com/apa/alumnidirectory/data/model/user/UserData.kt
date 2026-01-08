@@ -20,7 +20,7 @@ data class UserData(
     val preferredContact: String = PreferredContact.EMAIL.value,
     val contact: ContactInfo = ContactInfo(),
     val bio: String? = null,
-    val photoUrl: Int? = null,
+    val photoUrl: Int = 0,
     val rejectionMsg: String? = null,
     val createdAt: Long = 0L,
     val approvedAt: Long? = null
@@ -41,10 +41,10 @@ data class UserData(
             "location" to location.toMap(),
             "preferredContact" to preferredContact,
             "contact" to contact.toMap(),
-            "createdAt" to createdAt
+            "createdAt" to createdAt,
+            "photoUrl" to photoUrl
         )
         bio?.let { map["bio"] = it }
-        photoUrl?.let { map["photoUrl"] = it }
         approvedAt?.let { map["approvedAt"] = it }
         rejectionMsg?.let { map["rejectionMsg"] = it }
 

@@ -22,7 +22,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Gite
 import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Web
 import androidx.compose.material3.FloatingActionButton
@@ -41,6 +40,9 @@ import com.apa.alumnidirectory.data.enums.PreferredContact
 import com.apa.alumnidirectory.data.model.user.ContactInfo
 import com.apa.alumnidirectory.data.model.user.Location
 import com.apa.alumnidirectory.data.model.user.UserData
+import com.apa.alumnidirectory.ui.components.pfp.DefaultPfp
+import com.apa.alumnidirectory.ui.components.pfp.Pfp1
+import com.apa.alumnidirectory.ui.components.pfp.Pfp2
 import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.Email
 import com.apa.alumnidirectory.ui.theme.Github
@@ -120,10 +122,11 @@ fun Profile(
                         .background(Color.Gray, RoundedCornerShape(12.dp))
                         .border(2.dp, Color.LightGray, RoundedCornerShape(12.dp))
                 ) {
-                    Icon(
-                        Icons.Filled.Person, "",
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    when (user.photoUrl) {
+                        0 -> DefaultPfp()
+                        1 -> Pfp1()
+                        2 -> Pfp2()
+                    }
                 }
                 Column(
                     modifier = Modifier.fillMaxSize()
