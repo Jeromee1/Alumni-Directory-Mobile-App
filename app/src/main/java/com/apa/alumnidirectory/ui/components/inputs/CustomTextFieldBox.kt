@@ -24,12 +24,14 @@ fun CustomTextFieldBox(
     fields: List<FieldData>
 ) {
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(28.dp, 16.dp)
             .shadow(4.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .background(SecondaryG, RoundedCornerShape(12.dp))
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -41,7 +43,18 @@ fun CustomTextFieldBox(
                 fontWeight = FontWeight.Bold
             )
             fields.forEach { field ->
-                CustomTextField(field)
+                if (
+                    field.label == "Tech Stack"
+                    || field.label == "Department"
+                    || field.label == "Graduation Year"
+                ) {
+                    CustomDropdown(
+                        items = field.list,
+                        selectedItem = field.value.ifBlank { "Select a ${field.label}" },
+                    ) { field.onValueChange(it) }
+                } else {
+                    CustomTextField(field)
+                }
             }
         }
     }
