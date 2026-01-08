@@ -4,6 +4,7 @@ import com.apa.alumnidirectory.data.model.request.AppealReq
 import com.apa.alumnidirectory.data.model.request.LoginReq
 import com.apa.alumnidirectory.data.model.request.RegisterUserReq
 import com.apa.alumnidirectory.data.model.user.UserData
+import com.google.firebase.firestore.DocumentSnapshot
 
 interface AuthRepo {
     suspend fun register(user: RegisterUserReq)
@@ -25,4 +26,8 @@ interface AuthRepo {
     suspend fun resolveAppeal(uid: String)
     suspend fun approveUser(uid: String)
     suspend fun rejectUser(uid: String, msg: String)
+
+    suspend fun fetchMetadata(): DocumentSnapshot
+    suspend fun readMetadataDept(): List<String>
+    suspend fun readMetadataStacks(): List<String>
 }
