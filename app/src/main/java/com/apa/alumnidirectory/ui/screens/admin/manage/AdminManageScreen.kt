@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.model.ui.FieldData
 import com.apa.alumnidirectory.data.model.user.UserData
-import com.apa.alumnidirectory.ui.components.core.AdminManageUserCard
+import com.apa.alumnidirectory.ui.components.cards.AdminManageUserCard
 import com.apa.alumnidirectory.ui.components.inputs.CustomFilterButton
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextField
 import com.apa.alumnidirectory.ui.theme.SecondaryG

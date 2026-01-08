@@ -33,7 +33,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.model.request.AppealReq
-import com.apa.alumnidirectory.ui.components.core.AdminAppealsUserCard
+import com.apa.alumnidirectory.ui.components.cards.AdminAppealsUserCard
 import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.Primary
 import com.apa.alumnidirectory.ui.theme.SecondaryG

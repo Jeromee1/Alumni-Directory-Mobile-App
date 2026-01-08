@@ -41,7 +41,7 @@ import com.apa.alumnidirectory.data.enums.PreferredContact
 import com.apa.alumnidirectory.data.model.request.RegisterUserReq
 import com.apa.alumnidirectory.data.model.ui.FieldData
 import com.apa.alumnidirectory.ui.components.inputs.CustomDropdown
-import com.apa.alumnidirectory.ui.components.inputs.CustomTextFieldBox
+import com.apa.alumnidirectory.ui.components.inputs.CustomTextFieldBoxBG
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 
 @Composable
@@ -106,7 +106,7 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             form.apply {
-                CustomTextFieldBox(
+                CustomTextFieldBoxBG(
                     categoryName = "Basic Info",
                     fields = listOf(
                         FieldData("Full Name", fullName)
@@ -120,7 +120,7 @@ fun RegisterScreen(
                     )
                 )
 
-                CustomTextFieldBox(
+                CustomTextFieldBoxBG(
                     categoryName = "Academic Info",
                     fields = listOf(
                         FieldData("Graduation Year", graduationYear)
@@ -130,7 +130,7 @@ fun RegisterScreen(
                     )
                 )
 
-                CustomTextFieldBox(
+                CustomTextFieldBoxBG(
                     categoryName = "Professional Info",
                     fields = listOf(
                         FieldData("Position", position)

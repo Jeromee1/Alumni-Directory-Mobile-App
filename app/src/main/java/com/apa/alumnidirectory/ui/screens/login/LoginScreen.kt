@@ -32,7 +32,7 @@ import androidx.navigation.NavController
 import com.apa.alumnidirectory.R
 import com.apa.alumnidirectory.data.model.request.LoginReq
 import com.apa.alumnidirectory.data.model.ui.FieldData
-import com.apa.alumnidirectory.ui.components.inputs.CustomTextFieldBox
+import com.apa.alumnidirectory.ui.components.inputs.CustomTextFieldBoxBG
 import com.apa.alumnidirectory.ui.nav.Screen
 
 @Composable
@@ -85,7 +85,7 @@ fun LoginScreen(
                     )
                 }
             }
-            CustomTextFieldBox(
+            CustomTextFieldBoxBG(
                 "Login",
                 listOf(
                     FieldData("Email", form.email) { form = form.copy(email = it)},

@@ -19,7 +19,7 @@ import com.apa.alumnidirectory.data.model.ui.FieldData
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 
 @Composable
-fun CustomTextFieldBox(
+fun CustomTextFieldBoxBG(
     categoryName: String,
     fields: List<FieldData>
 ) {

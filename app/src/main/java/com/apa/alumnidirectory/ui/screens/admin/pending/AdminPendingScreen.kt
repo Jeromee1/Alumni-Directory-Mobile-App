@@ -22,7 +22,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.model.user.UserData
-import com.apa.alumnidirectory.ui.components.core.AdminPendingUserCard
+import com.apa.alumnidirectory.ui.components.cards.AdminPendingUserCard
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 
 @Composable
