@@ -34,6 +34,7 @@ fun buildUserData(req: RegisterUserReq, uid: String): UserData {
         null,
         null,
         req.createdAt,
+        req.lastUpdated,
         null
     )
 }

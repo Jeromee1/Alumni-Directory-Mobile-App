@@ -1,6 +1,7 @@
 package com.apa.alumnidirectory.data.enums
 
 enum class Sort(val value: String) {
+    DEFAULT("Default"),
     NAME_ASC("Name A-Z"),
     NAME_DESC("Name Z-A"),
     GRADUATION_YEAR_ASC("Graduation Year Ascending"),
