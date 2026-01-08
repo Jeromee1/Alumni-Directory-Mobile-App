@@ -41,7 +41,7 @@ import com.apa.alumnidirectory.data.model.ui.FieldData
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.data.utils.generateGradYears
 import com.apa.alumnidirectory.ui.components.bottomsheet.CustomBottomSheet
-import com.apa.alumnidirectory.ui.components.bottomsheet.filter.FilterSheetContent
+import com.apa.alumnidirectory.ui.components.bottomsheet.sheetcontent.FilterSheetContent
 import com.apa.alumnidirectory.ui.components.cards.HomeUserCard
 import com.apa.alumnidirectory.ui.components.inputs.CustomFilterButton
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextField
