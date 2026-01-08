@@ -41,6 +41,7 @@ import com.apa.alumnidirectory.data.enums.PreferredContact
 import com.apa.alumnidirectory.data.model.user.ContactInfo
 import com.apa.alumnidirectory.data.model.user.Location
 import com.apa.alumnidirectory.data.model.user.UserData
+import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.Email
 import com.apa.alumnidirectory.ui.theme.Github
 import com.apa.alumnidirectory.ui.theme.LinkedIn
@@ -84,12 +85,15 @@ fun ProfileScreen(
         approvedAt = 1286883853L
     )
 
-    Profile(tempUser)
+    val tempUid = "9USVzpEudKTUoTQmQkWoCk4Ic0u1"
+
+    Profile(tempUser) { navController.navigate(Screen.EditProfile(tempUid)) }
 }
 
 @Composable
 fun Profile(
-    user: UserData
+    user: UserData,
+    navToEdit: (String) -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize()
@@ -336,7 +340,7 @@ fun Profile(
             Spacer(Modifier.height(40.dp))
         }
         FloatingActionButton(
-            onClick = { /* Nav to edit profile */ },
+            onClick = { navToEdit(user.uid) },
             containerColor = Primary,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
