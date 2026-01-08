@@ -18,7 +18,6 @@ fun buildUserData(req: RegisterUserReq, uid: String): UserData {
     return UserData(
         uid,
         req.fullName,
-        req.fullName.lowercase(),
         req.email,
         Status.PENDING.value,
         Roles.ALUMNI.value,

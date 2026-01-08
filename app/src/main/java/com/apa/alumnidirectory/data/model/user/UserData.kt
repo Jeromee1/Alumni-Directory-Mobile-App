@@ -7,7 +7,6 @@ import com.apa.alumnidirectory.data.enums.Status
 data class UserData(
     val uid: String = "",
     val fullName: String = "",
-    val fullNameLower: String = "",
     val email: String = "",
     val status: String = Status.PENDING.value,
     val role: String = Roles.ALUMNI.value,
@@ -30,7 +29,6 @@ data class UserData(
         val map = mutableMapOf(
             "uid" to uid,
             "fullName" to fullName,
-            "fullNameLower" to fullNameLower,
             "email" to email,
             "status" to status,
             "role" to role,
