@@ -23,6 +23,7 @@ data class UserData(
     val photoUrl: String? = null,
     val rejectionMsg: String? = null,
     val createdAt: Long = 0L,
+    val lastUpdated: Long = 0L,
     val approvedAt: Long? = null
 ) {
     fun toMap(): Map<String, Any> {
@@ -41,7 +42,8 @@ data class UserData(
             "location" to location.toMap(),
             "preferredContact" to preferredContact,
             "contact" to contact.toMap(),
-            "createdAt" to createdAt
+            "createdAt" to createdAt,
+            "lastUpdated" to lastUpdated
         )
         bio?.let { map["bio"] = it }
         photoUrl?.let { map["photoUrl"] = it }

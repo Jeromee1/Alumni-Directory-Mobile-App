@@ -1,10 +1,13 @@
 package com.apa.alumnidirectory.ui.screens.home
 
 import androidx.lifecycle.viewModelScope
+import com.apa.alumnidirectory.data.model.ui.FilterOptions
+import com.apa.alumnidirectory.data.model.ui.FilterState
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.data.repo.AuthRepo
 import com.apa.alumnidirectory.service.FirebaseAuthService
 import com.apa.alumnidirectory.ui.base.BaseViewModel
+import com.apa.alumnidirectory.ui.uiutils.UserFilter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -29,40 +33,39 @@ class HomeViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
-    private val _searchQuery = MutableStateFlow("")
-    val searchQuery = _searchQuery.asStateFlow()
-    private val location = MutableStateFlow<String?>(null)
-    private val year = MutableStateFlow<String?>(null)
-    private val techStack = MutableStateFlow<String?>(null)
+    private val _filterState = MutableStateFlow(FilterState())
+    val filterState = _filterState.asStateFlow()
+
     val userList: StateFlow<List<UserData>> = filteredUsers()
+
+    val filterOptions: StateFlow<FilterOptions> = userOptions()
 
     init {
         fetchUserProfile()
         fetchUsersIfNeeded()
     }
 
+    private fun userOptions(): StateFlow<FilterOptions> {
+        return combine(approvedUsers, filterState.map { it.country }) { users, selectedCountry ->
+            val countries = users.map { it.location.country }.distinct().sorted()
+            val states = users
+                .filter { selectedCountry == null || it.location.country == selectedCountry }
+                .map { it.location.state }.distinct().sorted()
+            val years = users.map { it.graduationYear }.distinct().sorted()
+            val stacks = users.map { it.primaryStack }.distinct().sorted()
+            FilterOptions(
+                countries = countries, states = states, years = years, techStacks = stacks
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = FilterOptions()
+        )
+    }
+
     private fun filteredUsers(): StateFlow<List<UserData>> {
-        return combine(
-            approvedUsers,
-            _searchQuery,
-            location,
-            year,
-            techStack,
-        ) { users, query, location, year, stack ->
-            users
-                .filter { user ->
-                    if (query.isBlank()) true /* true - keep item, false - don't keep */
-                    else user.fullName.contains(query, ignoreCase = true)
-                }
-                .filter { user ->
-                    location == null || user.location.country == location
-                }
-                .filter { user ->
-                    year == null || user.graduationYear == year
-                }
-                .filter { user ->
-                    stack == null || user.primaryStack == stack
-                }
+        return combine(approvedUsers, filterState) { users, filters ->
+            UserFilter.filter(users, filters)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -83,7 +86,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun fetchUsersIfNeeded() {
-        if(approvedUsers.value.isNotEmpty()) return
+        if (approvedUsers.value.isNotEmpty()) return
         fetchUsers()
     }
 
@@ -104,25 +107,30 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onSearchChange(query: String) {
-        _searchQuery.value = query
+        _filterState.update { it.copy(query = query) }
     }
 
-    fun onLocationSelect(selectedLoc: String?) {
-        location.value = selectedLoc
+    fun onCountrySelect(selectedCountry: String?) {
+        _filterState.update { it.copy(country = selectedCountry, state = null) }
+    }
+
+    fun onStateSelect(selectedState: String?) {
+        _filterState.update { it.copy(state = selectedState) }
     }
 
     fun onGradYearSelect(selectedYear: String?) {
-        year.value = selectedYear
+        _filterState.update { it.copy(year = selectedYear) }
     }
 
     fun onPrimaryStackSelected(stack: String?) {
-        techStack.value = stack
+        _filterState.update { it.copy(techStack = stack) }
+    }
+
+    fun onSortSelected(sort: String) {
+        _filterState.update { it.copy(sort = sort) }
     }
 
     fun clearFilters() {
-        _searchQuery.value = ""
-        location.value = null
-        year.value = null
-        techStack.value = null
+        _filterState.value = FilterState()
     }
 }
