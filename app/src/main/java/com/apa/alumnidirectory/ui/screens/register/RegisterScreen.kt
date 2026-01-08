@@ -1,5 +1,6 @@
 package com.apa.alumnidirectory.ui.screens.register
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,16 +30,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.R
 import com.apa.alumnidirectory.data.enums.PreferredContact
 import com.apa.alumnidirectory.data.model.request.RegisterUserReq
 import com.apa.alumnidirectory.data.model.ui.FieldData
+import com.apa.alumnidirectory.data.utils.generateGradYears
 import com.apa.alumnidirectory.ui.components.inputs.CustomDropdown
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextFieldBoxBG
 import com.apa.alumnidirectory.ui.theme.SecondaryG
@@ -49,10 +52,13 @@ fun RegisterScreen(
     navController: NavController,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val countryNames by remember { mutableStateOf(viewModel.countries.map { it.name }) }
-    val selectedCountry by viewModel.selectedCountry.collectAsState()
-    val selectedState by viewModel.selectedState.collectAsState()
-    val states by viewModel.availableStates.collectAsState()
+    val selectedCountry by viewModel.selectedCountry.collectAsStateWithLifecycle()
+    val selectedState by viewModel.selectedState.collectAsStateWithLifecycle()
+    val states by viewModel.availableStates.collectAsStateWithLifecycle()
+    val stacks by viewModel.techStacks.collectAsStateWithLifecycle()
+    val departments by viewModel.departments.collectAsStateWithLifecycle()
 
     var form by remember { mutableStateOf(RegisterUserReq()) }
     val scrollState = rememberScrollState()
@@ -60,6 +66,11 @@ fun RegisterScreen(
     LaunchedEffect(Unit) {
         viewModel.finish.collect {
             navController.popBackStack()
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.toast.collect { msg ->
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -116,16 +127,18 @@ fun RegisterScreen(
                         FieldData("Password", password)
                         { form = copy(password = it) },
                         FieldData("Confirm Password", password2)
-                        { form = copy(password2 = it)}
+                        { form = copy(password2 = it) }
                     )
                 )
 
                 CustomTextFieldBoxBG(
                     categoryName = "Academic Info",
                     fields = listOf(
-                        FieldData("Graduation Year", graduationYear)
+                        FieldData("Graduation Year",
+                            graduationYear,
+                            generateGradYears().map { it.toString() })
                         { form = copy(graduationYear = it) },
-                        FieldData("Department", department)
+                        FieldData("Department", department, departments)
                         { form = copy(department = it) }
                     )
                 )
@@ -137,7 +150,7 @@ fun RegisterScreen(
                         { form = copy(position = it) },
                         FieldData("Company", company)
                         { form = copy(company = it) },
-                        FieldData("Tech Stack", techStack)
+                        FieldData("Tech Stack", techStack, stacks)
                         { form = copy(techStack = it) }
                     )
                 )
@@ -165,8 +178,10 @@ fun RegisterScreen(
                             items = countryNames,
                             selectedItem = selectedCountry?.name ?: "Select a Country",
                             onSelectedChange = { countryName ->
-                                viewModel.onCountrySelected(viewModel
-                                    .countries.first { it.name == countryName })
+                                viewModel.onCountrySelected(
+                                    viewModel
+                                        .countries.first { it.name == countryName })
+                                form = form.copy(country = countryName)
                             }
                         )
                         CustomDropdown(
@@ -174,6 +189,7 @@ fun RegisterScreen(
                             selectedItem = selectedState?.name ?: "Select a State",
                             onSelectedChange = { stateName ->
                                 viewModel.onStateSelected(states.first { it.name == stateName })
+                                form = form.copy(state = stateName)
                             }
                         )
                     }

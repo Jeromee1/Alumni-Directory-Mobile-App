@@ -18,6 +18,7 @@ class LoginViewModel @Inject constructor(
     val finish = _finish.asSharedFlow()
 
     fun login(loginReq: LoginReq) {
+        if(!validateLogin(loginReq)) return
         viewModelScope.launch {
             safeApiCall {
                 repo.login(loginReq).let {

@@ -34,7 +34,18 @@ fun CustomTextFieldBox(
                 fontWeight = FontWeight.Bold
             )
             fields.forEach { field ->
-                CustomTextField(field)
+                if (
+                    field.label == "Tech Stack"
+                    || field.label == "Department"
+                    || field.label == "Graduation Year"
+                ) {
+                    CustomDropdown(
+                        items = field.list,
+                        selectedItem = field.value.ifBlank { "Select a ${field.label}" },
+                    ) { field.onValueChange(it) }
+                } else {
+                    CustomTextField(field)
+                }
             }
         }
     }

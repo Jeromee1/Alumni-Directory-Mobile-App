@@ -3,11 +3,19 @@ package com.apa.alumnidirectory.ui.base
 import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.apa.alumnidirectory.data.model.request.LoginReq
+import com.apa.alumnidirectory.data.model.request.RegisterUserReq
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 open class BaseViewModel : ViewModel() {
+    private val _toast = MutableSharedFlow<String>()
+    val toast = _toast.asSharedFlow()
     suspend fun <T> safeApiCall(func: suspend () -> T?): T? {
         return try {
             val result = withContext(Dispatchers.IO) {
@@ -20,28 +28,63 @@ open class BaseViewModel : ViewModel() {
         }
     }
 
-    fun validateEmail(email: String): String? {
-        return if(email.isBlank()) "Email cannot be empty."
-        else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) "Invalid email."
-        else null
-    }
-
-    fun validatePasswords(pass: String, pass2: String): String? {
-        return if(pass.isBlank() || pass2.isBlank()) "Password fields cannot be empty."
-        else if (pass.length < 8) "Password must be at least 8 characters."
-        else if (pass != pass2) "Password and Confirm Password must match."
-        else null
-    }
-
-    fun registerValidate(email: String?, pass: String?): Boolean {
-        if (email != null) {
-            Log.d("debug", email)
-            return false
-        }
-        if (pass != null) {
-            Log.d("debug", pass)
+    fun validateLogin(form: LoginReq): Boolean {
+        if (form.email.isBlank() || form.password.isBlank()) {
+            emitToast("Fields cannot be blank")
             return false
         }
         return true
+    }
+
+    fun validateRegisterFields(form: RegisterUserReq): Boolean {
+        form.apply {
+            val fieldsWithMessages = listOf(
+                fullName to "Full name cannot be blank",
+                email to "Email cannot be blank",
+                password to "Password cannot be blank",
+                graduationYear to "Graduation year is required",
+                department to "Department is required",
+                position to "Position is required",
+                company to "Company is required",
+                techStack to "Tech stack is required",
+                state to "State is required",
+                country to "Country is required"
+            )
+            for ((value, message) in fieldsWithMessages) {
+                if (value.isBlank()) {
+                    emitToast(message)
+                    return false
+                }
+            }
+            if(!validateEmailFormat(email)) return false
+            if(!validatePassword(password, password2)) return false
+        }
+        return true
+    }
+
+    fun validateEmailFormat(email: String): Boolean {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emitToast("Invalid email format")
+            return false
+        }
+        return true
+    }
+    fun validatePassword(pass: String, pass2: String): Boolean {
+        if (pass.length < 8) {
+            emitToast("Password must be at least 8 characters")
+            return false
+        }
+
+        if (pass != pass2) {
+            emitToast("Passwords do not match")
+            return false
+        }
+        return true
+    }
+
+    private fun emitToast(msg: String) {
+        viewModelScope.launch {
+            _toast.emit(msg)
+        }
     }
 }

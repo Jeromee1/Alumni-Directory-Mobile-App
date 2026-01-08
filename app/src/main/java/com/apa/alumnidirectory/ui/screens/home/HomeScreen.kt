@@ -156,7 +156,7 @@ fun Home(
                     modifier = Modifier.weight(0.7f)
                 ) {
                     CustomTextField(
-                        FieldData("Search", search, onSearchChange)
+                        FieldData("Search", search, onValueChange = onSearchChange)
                     )
                 }
                 Box(

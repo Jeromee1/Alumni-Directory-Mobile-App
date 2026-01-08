@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -43,6 +44,11 @@ class RegisterViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
+    private val _techStacks = MutableStateFlow<List<String>>(emptyList())
+    val techStacks = _techStacks.asStateFlow()
+    private val _departments = MutableStateFlow<List<String>>(emptyList())
+    val departments = _departments.asStateFlow()
+
     fun onCountrySelected(country: Country) {
         _selectedCountry.value = country
         _selectedState.value = null
@@ -52,15 +58,26 @@ class RegisterViewModel @Inject constructor(
         _selectedState.value = state
     }
 
+    init {
+        fetchMetadata()
+    }
+
+    fun fetchMetadata() {
+        viewModelScope.launch {
+            safeApiCall {
+                repo.readMetadataDept().let { departments ->
+                    _departments.update { departments }
+                }
+                repo.readMetadataStacks().let { stacks ->
+                    _techStacks.update { stacks }
+                }
+            }
+        }
+    }
+
 
     fun register(userReq: RegisterUserReq) {
-        // Validate code
-        if (
-            !registerValidate(
-                validateEmail(userReq.email),
-                validatePasswords(userReq.password, userReq.password2)
-            )
-        ) return
+        if (!validateRegisterFields(userReq)) return
         viewModelScope.launch {
             val success = safeApiCall {
                 repo.register(userReq)

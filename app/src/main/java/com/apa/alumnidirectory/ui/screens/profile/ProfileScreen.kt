@@ -59,7 +59,6 @@ fun ProfileScreen(
     val tempUser = UserData(
         uid = "123",
         fullName = "John Doe",
-        fullNameLower = "john doe",
         email = "johndoe@gmail.com",
         status = "Approved",
         role = "CEO",

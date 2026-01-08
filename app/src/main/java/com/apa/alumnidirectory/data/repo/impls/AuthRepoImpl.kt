@@ -8,6 +8,7 @@ import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.data.repo.AuthRepo
 import com.apa.alumnidirectory.data.utils.buildUserData
 import com.apa.alumnidirectory.service.FirebaseAuthService
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import jakarta.inject.Inject
 import kotlinx.coroutines.tasks.await
@@ -25,6 +26,10 @@ class AuthRepoImpl @Inject constructor(
         .collection("alumni_directory_db")
         .document("directory")
         .collection("appeals")
+
+    private val dbMetadataRef = firestore
+        .collection("alumni_directory_db")
+        .document("metadata")
 
     override suspend fun register(user: RegisterUserReq) {
         val userUid = authService.register(user.email, user.password)
@@ -165,5 +170,19 @@ class AuthRepoImpl @Inject constructor(
                 )
                 .await()
         }
+    }
+
+    override suspend fun fetchMetadata(): DocumentSnapshot {
+        return dbMetadataRef.get().await()
+    }
+
+    override suspend fun readMetadataDept(): List<String> {
+        val snapshot = fetchMetadata()
+        return snapshot.get("techStacks") as? List<String> ?: emptyList()
+    }
+
+    override suspend fun readMetadataStacks(): List<String> {
+        val snapshot = fetchMetadata()
+        return snapshot.get("departments") as? List<String> ?: emptyList()
     }
 }
