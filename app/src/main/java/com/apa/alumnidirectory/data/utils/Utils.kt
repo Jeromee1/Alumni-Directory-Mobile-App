@@ -30,7 +30,7 @@ fun buildUserData(req: RegisterUserReq, uid: String): UserData {
         req.contactPreference,
         ContactInfo(),
         null,
-        null,
+        0,
         null,
         req.createdAt,
         req.lastUpdated,

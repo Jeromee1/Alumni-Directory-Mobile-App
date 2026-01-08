@@ -22,7 +22,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Gite
 import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Web
 import androidx.compose.material3.FloatingActionButton
@@ -41,6 +40,10 @@ import com.apa.alumnidirectory.data.enums.PreferredContact
 import com.apa.alumnidirectory.data.model.user.ContactInfo
 import com.apa.alumnidirectory.data.model.user.Location
 import com.apa.alumnidirectory.data.model.user.UserData
+import com.apa.alumnidirectory.ui.components.pfp.DefaultPfp
+import com.apa.alumnidirectory.ui.components.pfp.Pfp1
+import com.apa.alumnidirectory.ui.components.pfp.Pfp2
+import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.Email
 import com.apa.alumnidirectory.ui.theme.Github
 import com.apa.alumnidirectory.ui.theme.LinkedIn
@@ -53,42 +56,15 @@ fun ProfileScreen(
 //    uid: String,
     navController: NavController
 ) {
-    val tempUser = UserData(
-        uid = "123",
-        fullName = "John Doe",
-        email = "johndoe@gmail.com",
-        status = "Approved",
-        role = "CEO",
-        graduationYear = "2025",
-        department = "Store",
-        position = "Doggy",
-        company = "Alone",
-        primaryStack = "Overflow",
-        location = Location(
-            "Kuala Lumpur",
-            "Yemen"
-        ),
-        preferredContact = PreferredContact.EMAIL.value,
-        contact = ContactInfo(
-            true,
-            "012 3456 7890",
-            true,
-            "linkedin.com",
-            "github.com",
-            "mywebsite.com.my.cat.to.vet.now"
-        ),
-        bio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        photoUrl = 2,
-        createdAt = 12528582385L,
-        approvedAt = 1286883853L
-    )
-
-    Profile(tempUser)
+//    Profile() {
+//        navController.navigate(Screen.EditProfile())
+//    }
 }
 
 @Composable
 fun Profile(
-    user: UserData
+    user: UserData,
+    navToEdit: (String) -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize()
@@ -115,10 +91,11 @@ fun Profile(
                         .background(Color.Gray, RoundedCornerShape(12.dp))
                         .border(2.dp, Color.LightGray, RoundedCornerShape(12.dp))
                 ) {
-                    Icon(
-                        Icons.Filled.Person, "",
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    when (user.photoUrl) {
+                        0 -> DefaultPfp()
+                        1 -> Pfp1()
+                        2 -> Pfp2()
+                    }
                 }
                 Column(
                     modifier = Modifier.fillMaxSize()
@@ -335,7 +312,7 @@ fun Profile(
             Spacer(Modifier.height(40.dp))
         }
         FloatingActionButton(
-            onClick = { /* Nav to edit profile */ },
+            onClick = { navToEdit(user.uid) },
             containerColor = Primary,
             modifier = Modifier
                 .align(Alignment.BottomEnd)

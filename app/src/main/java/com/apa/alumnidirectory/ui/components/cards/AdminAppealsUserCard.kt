@@ -1,4 +1,4 @@
-package com.apa.alumnidirectory.ui.components.core
+package com.apa.alumnidirectory.ui.components.cards
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

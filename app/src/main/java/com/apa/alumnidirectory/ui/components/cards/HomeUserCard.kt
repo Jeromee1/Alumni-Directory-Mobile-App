@@ -1,6 +1,7 @@
-package com.apa.alumnidirectory.ui.components.core
+package com.apa.alumnidirectory.ui.components.cards
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,11 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,6 +27,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.apa.alumnidirectory.data.model.user.UserData
+import com.apa.alumnidirectory.ui.components.pfp.DefaultPfp
+import com.apa.alumnidirectory.ui.components.pfp.Pfp1
+import com.apa.alumnidirectory.ui.components.pfp.Pfp2
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 import com.apa.alumnidirectory.ui.theme.Text1
 
@@ -79,12 +80,13 @@ fun HomeUserCard(
                             .fillMaxWidth()
                             .aspectRatio(1f)
                             .background(Color.Gray, RoundedCornerShape(12.dp))
+                            .border(2.dp, Color.LightGray, RoundedCornerShape(12.dp))
                     ) {
-                        //Temp Pfp Image
-                        Icon(
-                            Icons.Filled.Person, "",
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        when (user.photoUrl) {
+                            0 -> DefaultPfp()
+                            1 -> Pfp1()
+                            2 -> Pfp2()
+                        }
                     }
                     Text(
                         user.graduationYear,

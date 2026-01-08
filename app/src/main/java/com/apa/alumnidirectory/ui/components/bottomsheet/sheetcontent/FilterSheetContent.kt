@@ -1,4 +1,4 @@
-package com.apa.alumnidirectory.ui.components.bottomsheet.filter
+package com.apa.alumnidirectory.ui.components.bottomsheet.sheetcontent
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
