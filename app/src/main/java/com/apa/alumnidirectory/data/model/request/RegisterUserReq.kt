@@ -16,4 +16,5 @@ data class RegisterUserReq(
     val country: String = "",
     val contactPreference: String = PreferredContact.entries.first().value,
     val createdAt: Long = System.currentTimeMillis(),
+    val lastUpdated: Long = System.currentTimeMillis()
 )

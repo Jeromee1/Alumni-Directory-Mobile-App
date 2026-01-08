@@ -22,29 +22,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.apa.alumnidirectory.data.enums.Filter
-import com.apa.alumnidirectory.data.enums.Sort
+import com.apa.alumnidirectory.data.model.ui.DropdownData
 import com.apa.alumnidirectory.ui.components.inputs.CustomDropdown
 
 @Composable
 fun FilterSheetContent(
-    filterOnSelected: (String) -> Unit,
-    sortOnSelected: (String) -> Unit,
-    techStackOnSelected: (String) -> Unit,
-    techStack: List<String>,
-    selectedTechStack: String,
-    countryOnSelected: (String) -> Unit,
-    country: List<String>,
-    selectedCountry: String,
-    stateOnSelected: (String) -> Unit,
-    state: List<String>,
-    selectedState: String,
-    yearsOnSelected: (String) -> Unit,
-    years: List<String>,
-    selectedYear: String
+    onClear: () -> Unit,
+    countrySelection: String?,
+    sortData: DropdownData,
+    techStackData: DropdownData,
+    countryData: DropdownData,
+    stateData: DropdownData,
+    yearData:DropdownData
 ) {
     var selectedFilter by remember { mutableStateOf(Filter.entries.first().value) }
-    var selectedSort by remember { mutableStateOf(Sort.entries.first().value) }
-
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -60,12 +51,11 @@ fun FilterSheetContent(
             Filter.entries.map { it.value },
             selectedFilter,
         ) {
-            filterOnSelected(it)
             selectedFilter = it
         }
     }
     //Tech Stack
-    if(selectedFilter == Filter.TECH_STACK.value) {
+    if (selectedFilter == Filter.TECH_STACK.value) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(20.dp),
@@ -83,14 +73,14 @@ fun FilterSheetContent(
                     color = Color.Black
                 )
                 CustomDropdown(
-                    techStack,
-                    selectedTechStack
-                ) { techStackOnSelected(it) }
+                    techStackData.list,
+                    techStackData.selectedItem
+                ) { techStackData.onSelected(it) }
             }
         }
     }
     //Location
-    if(selectedFilter == Filter.LOCATION.value) {
+    if (selectedFilter == Filter.LOCATION.value) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(20.dp),
@@ -108,9 +98,9 @@ fun FilterSheetContent(
                     color = Color.Black
                 )
                 CustomDropdown(
-                    country,
-                    selectedCountry
-                ) { countryOnSelected(it) }
+                    countryData.list,
+                    countryData.selectedItem
+                ) { countryData.onSelected(it) }
             }
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -124,14 +114,15 @@ fun FilterSheetContent(
                     color = Color.Black
                 )
                 CustomDropdown(
-                    state,
-                    selectedState
-                ) { stateOnSelected(it) }
+                    stateData.list,
+                    stateData.selectedItem,
+                    countrySelection != null
+                ) { stateData.onSelected(it) }
             }
         }
     }
     //Year
-    if(selectedFilter == Filter.GRADUATION_YEAR.value) {
+    if (selectedFilter == Filter.GRADUATION_YEAR.value) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
@@ -149,9 +140,9 @@ fun FilterSheetContent(
                     color = Color.Black
                 )
                 CustomDropdown(
-                    years,
-                    selectedYear
-                ) { yearsOnSelected(it) }
+                    yearData.list,
+                    yearData.selectedItem
+                ) { yearData.onSelected(it) }
             }
         }
     }
@@ -168,11 +159,10 @@ fun FilterSheetContent(
             color = Color.Black
         )
         CustomDropdown(
-            Sort.entries.map { it.value },
-            selectedSort,
+            sortData.list,
+            sortData.selectedItem,
         ) {
-            sortOnSelected(it)
-            selectedSort = it
+            sortData.onSelected(it)
         }
     }
     Spacer(Modifier.height(60.dp))
@@ -180,10 +170,12 @@ fun FilterSheetContent(
         modifier = Modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        onClick = { /* Apply filter & sort */ }
+        onClick = {
+            onClear()
+        }
     ) {
         Text(
-            "Apply Changes",
+            "Clear Filters",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(8.dp)

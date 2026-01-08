@@ -26,10 +26,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -37,9 +34,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.enums.Roles
+import com.apa.alumnidirectory.data.enums.Sort
+import com.apa.alumnidirectory.data.model.ui.DropdownData
 import com.apa.alumnidirectory.data.model.ui.FieldData
 import com.apa.alumnidirectory.data.model.user.UserData
-import com.apa.alumnidirectory.data.utils.generateGradYears
 import com.apa.alumnidirectory.ui.components.bottomsheet.CustomBottomSheet
 import com.apa.alumnidirectory.ui.components.bottomsheet.sheetcontent.FilterSheetContent
 import com.apa.alumnidirectory.ui.components.cards.HomeUserCard
@@ -47,6 +45,7 @@ import com.apa.alumnidirectory.ui.components.inputs.CustomFilterButton
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextField
 import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.Primary
+import com.apa.alumnidirectory.ui.uiutils.FilterPlaceholders
 import kotlinx.coroutines.launch
 import kotlin.String
 
@@ -60,7 +59,8 @@ fun HomeScreen(
 
     val users by viewModel.userList.collectAsStateWithLifecycle()
     val user by viewModel.currentUser.collectAsStateWithLifecycle()
-    val search by viewModel.searchQuery.collectAsStateWithLifecycle()
+    val filter by viewModel.filterState.collectAsStateWithLifecycle()
+    val options by viewModel.filterOptions.collectAsStateWithLifecycle()
 
     //Refreshing code
     val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
@@ -71,7 +71,7 @@ fun HomeScreen(
     Home(
         user,
         users,
-        search,
+        filter.query,
         refreshing,
         pullState,
         viewModel::refresh,
@@ -81,36 +81,48 @@ fun HomeScreen(
         viewModel::onSearchChange
     )
 
-    val years = generateGradYears().map { it.toString() }
-    val tempList = listOf("Hello", "World")
-
-    var selectedTechStack by remember { mutableStateOf(tempList.first()) }
-    var selectedCountry by remember { mutableStateOf(tempList.first()) }
-    var selectedState by remember { mutableStateOf(tempList.first()) }
-    var selectedYear by remember { mutableStateOf(years.first()) }
+    val selectedSort = filter.sort
+    val selectedTechStack = filter.techStack ?: FilterPlaceholders.STACK
+    val selectedCountry = filter.country ?: FilterPlaceholders.COUNTRY
+    val selectedState = filter.state ?: FilterPlaceholders.STATE
+    val selectedYear = filter.year ?: FilterPlaceholders.YEAR
 
     CustomBottomSheet(
         bottomSheetState,
         { scope.launch { bottomSheetState.hide() } }
     ) {
         FilterSheetContent(
-            filterOnSelected = {  },
-            sortOnSelected = {  },
-            techStackOnSelected = { selectedTechStack = it },
-            techStack = tempList,
-            selectedTechStack = selectedTechStack,
-            countryOnSelected = { selectedCountry = it },
-            country = tempList,
-            selectedCountry = selectedCountry,
-            stateOnSelected = { selectedState = it },
-            state = tempList,
-            selectedState = selectedState,
-            yearsOnSelected = { selectedYear = it },
-            years = years,
-            selectedYear = selectedYear,
+            { viewModel.clearFilters() },
+            filter.country,
+            DropdownData(
+                Sort.entries.map { it.value },
+                selectedSort,
+                viewModel::onSortSelected
+            ),
+            DropdownData(
+                options.techStacks,
+                selectedTechStack,
+                viewModel::onPrimaryStackSelected
+            ),
+            DropdownData(
+                options.countries,
+                selectedCountry,
+                viewModel::onCountrySelect
+            ),
+            DropdownData(
+                options.states,
+                selectedState,
+                viewModel::onStateSelect
+            ),
+            DropdownData(
+                options.years,
+                selectedYear,
+                viewModel::onGradYearSelect
+            ),
         )
     }
 }
+
 
 @Composable
 fun Home(

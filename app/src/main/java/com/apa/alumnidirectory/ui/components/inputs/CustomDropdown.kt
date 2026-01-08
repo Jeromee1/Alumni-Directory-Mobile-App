@@ -26,13 +26,14 @@ import com.apa.alumnidirectory.ui.theme.Primary
 fun CustomDropdown(
     items: List<String>,
     selectedItem: String,
+    enabled: Boolean = true,
     onSelectedChange:(String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { if (items.isNotEmpty()) expanded = !expanded },
+        onExpandedChange = { if (items.isNotEmpty() && enabled) expanded = !expanded },
     ) {
         OutlinedTextField(
             value = selectedItem,
