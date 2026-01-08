@@ -24,6 +24,7 @@ import com.apa.alumnidirectory.ui.screens.admin.pending.AdminPendingScreen
 import com.apa.alumnidirectory.ui.screens.home.HomeScreen
 import com.apa.alumnidirectory.ui.screens.login.LoginScreen
 import com.apa.alumnidirectory.ui.screens.pending.PendingScreen
+import com.apa.alumnidirectory.ui.screens.profile.ProfileScreen
 import com.apa.alumnidirectory.ui.screens.register.RegisterScreen
 import com.apa.alumnidirectory.ui.theme.Background
 import com.apa.alumnidirectory.ui.theme.Text1
@@ -66,7 +67,7 @@ fun AppNav() {
 
 @Composable
 fun Nav(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.Home) {
+    NavHost(navController = navController, startDestination = Screen.Profile) {
         composable<Screen.Home> { HomeScreen(navController) }
         composable<Screen.Login> { LoginScreen(navController) }
         composable<Screen.Register> { RegisterScreen(navController) }
@@ -76,5 +77,6 @@ fun Nav(navController: NavHostController) {
         composable<Screen.AdminManage> { AdminManageScreen(navController) }
         composable<Screen.AdminAppeals> { AdminAppealsScreen(navController) }
         composable<Screen.AdminAppealsDetails> { AdminAppealsDetailsScreen(navController) }
+        composable<Screen.Profile> { ProfileScreen(navController) }
     }
 }

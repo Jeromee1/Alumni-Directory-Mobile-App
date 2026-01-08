@@ -4,5 +4,6 @@ enum class PreferredContact(val value: String) {
     EMAIL("Email"),
     PHONE("Phone"),
     LINKEDIN("LinkedIn"),
-    WHATSAPP("WhatsApp");
+    GITHUB("GitHub"),
+    WEBSITE("Website")
 }

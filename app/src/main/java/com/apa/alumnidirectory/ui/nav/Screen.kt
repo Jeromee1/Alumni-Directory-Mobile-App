@@ -13,4 +13,6 @@ sealed class Screen {
     @Serializable object AdminManage: Screen()
     @Serializable object AdminAppeals: Screen()
     @Serializable data class AdminAppealsDetails(val appealId: String): Screen()
+    @Serializable object Profile: Screen()
+   
 }
