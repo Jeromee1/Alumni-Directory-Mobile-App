@@ -72,7 +72,7 @@ fun AdminManage(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                "Manage Users: {Amount here}",
+                "Manage Users: ${users.size}",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )

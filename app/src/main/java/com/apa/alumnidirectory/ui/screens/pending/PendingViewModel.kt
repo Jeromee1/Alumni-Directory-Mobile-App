@@ -62,10 +62,10 @@ class PendingViewModel @Inject constructor(
             _currentUser.value.second?.userData?.let {
                 safeApiCall {
                     repo.submitAppeal(AppealReq(
-                        uid = it.uid,
+                        userUid = it.uid,
                         name = it.fullName,
                         email = it.email,
-                        msg = "Appeal Test 2, cause i accidentally screwed everything up"
+                        msg = "document uid test"
                     ))
                 }
             }

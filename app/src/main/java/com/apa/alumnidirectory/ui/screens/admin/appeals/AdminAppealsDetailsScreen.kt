@@ -19,12 +19,15 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.model.request.AppealReq
 import com.apa.alumnidirectory.ui.theme.Danger
@@ -33,19 +36,30 @@ import com.apa.alumnidirectory.ui.theme.SecondaryG
 
 @Composable
 fun AdminAppealsDetailsScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: AdminAppealsDetailsViewModel = hiltViewModel()
 ) {
-    val temp = AppealReq(
-        name = "Temp"
-    )
+    val appeal = viewModel.appeal.collectAsStateWithLifecycle().value
 
-    //Pass appeal details \/
-    AdminAppealsDetails(temp)
+    LaunchedEffect(Unit) {
+        viewModel.finish.collect {
+            navController.popBackStack()
+        }
+    }
+    appeal?.let {
+        AdminAppealsDetails(
+            appeal,
+            viewModel::approveUser,
+            viewModel::rejectUser
+        )
+    }
 }
 
 @Composable
 fun AdminAppealsDetails(
-    details: AppealReq
+    details: AppealReq,
+    onApprove: () -> Unit,
+    onReject: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -107,39 +121,41 @@ fun AdminAppealsDetails(
                 )
             }
         }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Button(
-                onClick = {  },
-                modifier = Modifier
-                    .fillMaxWidth(0.5f),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Primary
-                ),
-                shape = RoundedCornerShape(12.dp)
+        if (!details.resolved) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    "Approve",
-                    modifier = Modifier.padding(0.dp, 6.dp)
-                )
-            }
-            Button(
-                onClick = {  },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(6.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Danger
-                ),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text(
-                    "Reject",
-                    modifier = Modifier.padding(0.dp, 6.dp)
-                )
+                Button(
+                    onClick = { onApprove() },
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Primary
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                ) {
+                    Text(
+                        "Approve",
+                        modifier = Modifier.padding(0.dp, 6.dp)
+                    )
+                }
+                Button(
+                    onClick = { onReject() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Danger
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                ) {
+                    Text(
+                        "Reject",
+                        modifier = Modifier.padding(0.dp, 6.dp)
+                    )
+                }
             }
         }
         Spacer(Modifier.height(4.dp))
