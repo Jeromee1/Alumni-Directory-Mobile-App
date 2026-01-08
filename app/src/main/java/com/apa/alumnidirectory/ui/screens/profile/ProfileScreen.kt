@@ -56,39 +56,9 @@ fun ProfileScreen(
 //    uid: String,
     navController: NavController
 ) {
-    val tempUser = UserData(
-        uid = "123",
-        fullName = "John Doe",
-        email = "johndoe@gmail.com",
-        status = "Approved",
-        role = "CEO",
-        graduationYear = "2025",
-        department = "Store",
-        position = "Doggy",
-        company = "Alone",
-        primaryStack = "Overflow",
-        location = Location(
-            "Kuala Lumpur",
-            "Yemen"
-        ),
-        preferredContact = PreferredContact.EMAIL.value,
-        contact = ContactInfo(
-            true,
-            "012 3456 7890",
-            true,
-            "linkedin.com",
-            "github.com",
-            "mywebsite.com.my.cat.to.vet.now"
-        ),
-        bio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        photoUrl = 2,
-        createdAt = 12528582385L,
-        approvedAt = 1286883853L
-    )
-
-    val tempUid = "9USVzpEudKTUoTQmQkWoCk4Ic0u1"
-
-    Profile(tempUser) { navController.navigate(Screen.EditProfile(tempUid)) }
+//    Profile() {
+//        navController.navigate(Screen.EditProfile())
+//    }
 }
 
 @Composable
