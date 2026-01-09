@@ -23,11 +23,12 @@ import com.apa.alumnidirectory.ui.theme.Primary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomDropdown(
-    items: List<String>,
+fun <T>CustomDropdown(
+    items: List<T>,
     selectedItem: String,
     enabled: Boolean = true,
-    onSelectedChange:(String) -> Unit
+    itemLabel: (T) -> String,
+    onSelectedChange: (T) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -59,7 +60,7 @@ fun CustomDropdown(
         ) {
             items.forEach { item ->
                 DropdownMenuItem(
-                    text = { Text(item) },
+                    text = { Text(itemLabel(item)) },
                     onClick = {
                         onSelectedChange(item)
                         expanded = false

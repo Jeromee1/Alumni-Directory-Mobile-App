@@ -42,6 +42,7 @@ fun CustomTextFieldBox(
                     CustomDropdown(
                         items = field.list,
                         selectedItem = field.value.ifBlank { "Select a ${field.label}" },
+                        itemLabel = { it }
                     ) { field.onValueChange(it) }
                 } else {
                     CustomTextField(field)

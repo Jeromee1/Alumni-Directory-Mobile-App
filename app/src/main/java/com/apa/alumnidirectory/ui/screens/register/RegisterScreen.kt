@@ -40,7 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.R
 import com.apa.alumnidirectory.data.enums.PreferredContact
-import com.apa.alumnidirectory.data.model.request.RegisterUserReq
+import com.apa.alumnidirectory.data.model.forms.RegisterForm
 import com.apa.alumnidirectory.data.model.ui.FieldData
 import com.apa.alumnidirectory.data.utils.generateGradYears
 import com.apa.alumnidirectory.ui.components.inputs.CustomDropdown
@@ -55,12 +55,12 @@ fun RegisterScreen(
     val context = LocalContext.current
     val countryNames by remember { mutableStateOf(viewModel.countries.map { it.name }) }
     val selectedCountry by viewModel.selectedCountry.collectAsStateWithLifecycle()
-    val selectedState by viewModel.selectedState.collectAsStateWithLifecycle()
     val states by viewModel.availableStates.collectAsStateWithLifecycle()
+    val selectedState by viewModel.selectedState.collectAsStateWithLifecycle()
     val stacks by viewModel.techStacks.collectAsStateWithLifecycle()
     val departments by viewModel.departments.collectAsStateWithLifecycle()
 
-    var form by remember { mutableStateOf(RegisterUserReq()) }
+    var form by remember { mutableStateOf(RegisterForm()) }
     val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
@@ -177,6 +177,7 @@ fun RegisterScreen(
                         CustomDropdown(
                             items = countryNames,
                             selectedItem = selectedCountry?.name ?: "Select a Country",
+                            itemLabel = { it },
                             onSelectedChange = { countryName ->
                                 viewModel.onCountrySelected(
                                     viewModel
@@ -187,6 +188,7 @@ fun RegisterScreen(
                         CustomDropdown(
                             items = states.map { it.name },
                             selectedItem = selectedState?.name ?: "Select a State",
+                            itemLabel = { it },
                             onSelectedChange = { stateName ->
                                 viewModel.onStateSelected(states.first { it.name == stateName })
                                 form = form.copy(state = stateName)
@@ -218,6 +220,7 @@ fun RegisterScreen(
                         CustomDropdown(
                             PreferredContact.entries.map { it.value },
                             contactPreference,
+                            itemLabel = { it }
                         )
                         { form = copy(contactPreference = it) }
                     }

@@ -13,10 +13,11 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CustomDialog(
     onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
+    onConfirmation: (() -> Unit)? = null,
     dialogTitle: String,
     dialogText: String,
     icon: ImageVector,
+    showConfirmation: Boolean = true
 ) {
     AlertDialog(
         icon = {
@@ -34,12 +35,10 @@ fun CustomDialog(
         },
         onDismissRequest = { onDismissRequest() },
         confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirmation()
+            if (showConfirmation && onConfirmation != null) {
+                TextButton(onClick = onConfirmation) {
+                    Text("Confirm")
                 }
-            ) {
-                Text("Confirm")
             }
         },
         dismissButton = {

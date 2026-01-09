@@ -1,5 +1,6 @@
 package com.apa.alumnidirectory.ui.screens.profile.edit
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -37,18 +38,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.apa.alumnidirectory.data.model.request.EditProfileReq
+import com.apa.alumnidirectory.data.enums.PreferredContact
+import com.apa.alumnidirectory.data.enums.Status
+import com.apa.alumnidirectory.data.model.forms.AdminEditProfileForm
+import com.apa.alumnidirectory.data.model.forms.EditProfileForm
+import com.apa.alumnidirectory.data.model.ui.Country
 import com.apa.alumnidirectory.data.model.ui.FieldData
+import com.apa.alumnidirectory.data.model.ui.State
+import com.apa.alumnidirectory.data.utils.generateGradYears
 import com.apa.alumnidirectory.ui.components.bottomsheet.CustomBottomSheet
 import com.apa.alumnidirectory.ui.components.bottomsheet.sheetcontent.ProfileImageSheetContent
 import com.apa.alumnidirectory.ui.components.confirmation.CustomDialog
 import com.apa.alumnidirectory.ui.components.core.LoadingIcon
+import com.apa.alumnidirectory.ui.components.inputs.CustomDropdown
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextFieldBox
 import com.apa.alumnidirectory.ui.components.pfp.DefaultPfp
 import com.apa.alumnidirectory.ui.components.pfp.Pfp1
@@ -63,19 +72,37 @@ fun EditProfileScreen(
     navController: NavController,
     viewModel: EditProfileViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var form by remember { mutableStateOf(EditProfileReq()) }
+    var form by remember { mutableStateOf(EditProfileForm()) }
+    var adminForm by remember { mutableStateOf(AdminEditProfileForm()) }
     var isLoading by remember { mutableStateOf(true) }
     var showDialog by remember { mutableStateOf(false) }
 
+    val countryNames = viewModel.countries
+    val selectedCountry by viewModel.selectedCountry.collectAsStateWithLifecycle()
+    val states by viewModel.availableStates.collectAsStateWithLifecycle()
+    val selectedState by viewModel.selectedState.collectAsStateWithLifecycle()
+
+    val perms = viewModel.permissionCheck()
     val user = viewModel.user.collectAsStateWithLifecycle().value
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    LaunchedEffect(Unit) {
+        viewModel.finish.collect {
+            navController.popBackStack()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.toast.collect { msg ->
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     LaunchedEffect(user) {
         if (user != null) {
             form = form.copy(
-                fullName = user.fullName,
-                email = user.email,
                 department = user.department,
                 position = user.position,
                 company = user.company,
@@ -86,16 +113,31 @@ fun EditProfileScreen(
                 bio = user.bio,
                 photoUrl = user.photoUrl
             )
+            adminForm = adminForm.copy(
+                fullName = user.fullName,
+                status = user.status,
+                graduationYear = user.graduationYear
+            )
             isLoading = false
         } else {
             isLoading = true
         }
     }
 
-    if(!isLoading) {
+    if (!isLoading && user != null) {
+
         EditProfile(
+            perms,
             form,
             { form = it },
+            adminForm,
+            { adminForm = it },
+            countryNames,
+            selectedCountry,
+            viewModel::onCountrySelected,
+            states,
+            selectedState,
+            viewModel::onStateSelected,
             { showDialog = true }
         ) { scope.launch { bottomSheetState.show() } }
 
@@ -107,11 +149,13 @@ fun EditProfileScreen(
             { form = form.copy(photoUrl = it) }
         }
 
-        if(showDialog) {
+        if (showDialog) {
             CustomDialog(
                 { showDialog = false },
                 {
                     //Save and navigate
+                    if (perms) viewModel.adminUpdateUser(form, adminForm)
+                    else viewModel.updateUser(form)
                     showDialog = false
                 },
                 "Save changes?",
@@ -131,8 +175,17 @@ fun EditProfileScreen(
 
 @Composable
 fun EditProfile(
-    form: EditProfileReq,
-    formOnChange: (EditProfileReq) -> Unit,
+    perms: Boolean,
+    form: EditProfileForm,
+    formOnChange: (EditProfileForm) -> Unit,
+    adminForm: AdminEditProfileForm,
+    adminFormOnChange: (AdminEditProfileForm) -> Unit,
+    countryNames: List<Country>,
+    selectedCountry: Country?,
+    onSelectedCountry: (Country) -> Unit,
+    states: List<State>,
+    selectedState: State?,
+    onSelectedState: (State) -> Unit,
     openDialog: () -> Unit,
     openBottomSheet: () -> Unit
 ) {
@@ -201,21 +254,24 @@ fun EditProfile(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
-//            CustomDropdown(
-//                items = countryNames,
-//                selectedItem = selectedCountry?.name ?: "Select a Country",
-//                onSelectedChange = { countryName ->
-//                    viewModel.onCountrySelected(viewModel
-//                        .countries.first { it.name == countryName })
-//                }
-//            )
-//            CustomDropdown(
-//                items = states.map { it.name },
-//                selectedItem = selectedState?.name ?: "Select a State",
-//                onSelectedChange = { stateName ->
-//                    viewModel.onStateSelected(states.first { it.name == stateName })
-//                }
-//            )
+                    CustomDropdown(
+                        items = countryNames,
+                        selectedItem = selectedCountry?.name ?: "Select a Country",
+                        itemLabel = { it.name },
+                        onSelectedChange = {
+                            copy(location = location.copy(country = it.name))
+                            onSelectedCountry(it)
+                        }
+                    )
+                    CustomDropdown(
+                        items = states,
+                        selectedItem = selectedState?.name ?: "Select a State",
+                        itemLabel = { it.name },
+                        onSelectedChange = { stateName ->
+                            copy(location = location.copy(state = stateName.name))
+                            onSelectedState(stateName)
+                        }
+                    )
                     HorizontalDivider(thickness = 1.dp)
                     //Section4
                     Column(
@@ -273,11 +329,12 @@ fun EditProfile(
                                 )
                             }
                         }
-//                    CustomDropdown(
-//                        PreferredContact.entries.map { it.value },
-//                        contactPreference,
-//                    )
-//                    { formOnChange() }
+                        CustomDropdown(
+                            PreferredContact.entries.map { it.value },
+                            preferredContact,
+                            itemLabel = { it }
+                        )
+                        { formOnChange(copy(preferredContact = it)) }
                     }
                     HorizontalDivider(thickness = 1.dp)
                     //Section5
@@ -303,17 +360,33 @@ fun EditProfile(
                             { formOnChange(copy(bio = it)) },
                         )
                     )
-                    if(/* User is admin */ true) {
+                    if (perms) {
                         HorizontalDivider(thickness = 1.dp)
                         //Section6
                         CustomTextFieldBox(
                             categoryName = "Admin Configurations",
                             fields = listOf(
-                                FieldData("FullName", fullName)
-                                { formOnChange(copy(fullName = it)) },
+                                FieldData("FullName", adminForm.fullName)
+                                { adminFormOnChange(adminForm.copy(fullName = it)) },
                             )
                         )
                         ///Status & Graduation Year dropdowns here
+                        CustomDropdown(
+                            items = Status.entries,
+                            selectedItem = adminForm.status.replaceFirstChar { it.uppercase() },
+                            itemLabel = { word -> word.value.replaceFirstChar { it.uppercase() } },
+                            onSelectedChange = {
+                                adminFormOnChange(adminForm.copy(status = it.value))
+                            }
+                        )
+                        CustomDropdown(
+                            items = generateGradYears(),
+                            selectedItem = adminForm.graduationYear,
+                            itemLabel = { it.toString() },
+                            onSelectedChange = {
+                                adminFormOnChange(adminForm.copy(graduationYear = it.toString()))
+                            }
+                        )
                     }
                 }
                 Spacer(Modifier.height(80.dp))

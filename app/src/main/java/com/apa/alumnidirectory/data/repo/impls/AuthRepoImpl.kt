@@ -1,11 +1,15 @@
 package com.apa.alumnidirectory.data.repo.impls
 
 import com.apa.alumnidirectory.data.enums.Status
+import com.apa.alumnidirectory.data.model.forms.AdminEditProfileForm
+import com.apa.alumnidirectory.data.model.forms.EditProfileForm
+import com.apa.alumnidirectory.data.model.forms.RegisterForm
 import com.apa.alumnidirectory.data.model.request.AppealReq
 import com.apa.alumnidirectory.data.model.request.LoginReq
-import com.apa.alumnidirectory.data.model.request.RegisterUserReq
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.data.repo.AuthRepo
+import com.apa.alumnidirectory.data.utils.buildAdminEditReq
+import com.apa.alumnidirectory.data.utils.buildEditReq
 import com.apa.alumnidirectory.data.utils.buildUserData
 import com.apa.alumnidirectory.service.FirebaseAuthService
 import com.google.firebase.firestore.DocumentSnapshot
@@ -31,7 +35,7 @@ class AuthRepoImpl @Inject constructor(
         .collection("alumni_directory_db")
         .document("metadata")
 
-    override suspend fun register(user: RegisterUserReq) {
+    override suspend fun register(user: RegisterForm) {
         val userUid = authService.register(user.email, user.password)
         val userData = buildUserData(user, userUid)
 
@@ -54,6 +58,16 @@ class AuthRepoImpl @Inject constructor(
             .await()
             .toObject(UserData::class.java)
             ?: throw java.lang.IllegalStateException("User doesn't exist")
+    }
+
+    override suspend fun updateProfile(uid: String, form: EditProfileForm) {
+        val updates = buildEditReq(form).toMap()
+        dbRef.document(uid).update(updates).await()
+    }
+
+    override suspend fun adminUpdateProfile(uid: String, form: AdminEditProfileForm) {
+        val updates = buildAdminEditReq(form).toMap()
+        dbRef.document(uid).update(updates).await()
     }
 
     override suspend fun fetchAllUsers(): List<UserData> {
@@ -128,17 +142,6 @@ class AuthRepoImpl @Inject constructor(
                 )
             )
     }
-
-
-//    override suspend fun fetchRejectedUsers(): List<UserData> {
-//        val snapshot = dbRef
-//            .whereEqualTo("status", "rejected")
-//            .get()
-//            .await()
-//        return snapshot.documents.mapNotNull {
-//            it.toObject(UserData::class.java)
-//        }
-//    }
 
     override suspend fun approveUser(uid: String) {
         dbRef.document(uid)

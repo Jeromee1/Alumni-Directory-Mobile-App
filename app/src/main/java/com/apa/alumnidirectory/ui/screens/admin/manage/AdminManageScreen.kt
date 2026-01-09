@@ -36,6 +36,7 @@ import com.apa.alumnidirectory.ui.components.cards.AdminManageUserCard
 import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.components.inputs.CustomFilterButton
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextField
+import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 import kotlinx.coroutines.launch
 
@@ -50,21 +51,21 @@ fun AdminManageScreen(
     var search by remember { mutableStateOf("") }
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    if(/* user list empty */ false) {
+    if (/* user list empty */ false) {
 //    AdminManage(
         //    User stuff here,
         //    search,
 //        { scope.launch { bottomSheetState.show() } }
-    //    ) { search = it }
+        //    ) { search = it }
     } else {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
 
-        Text("Its set to load forever, do the manage backend stuff and remove this text")
-
+            Text("Its set to load forever, do the manage backend stuff and remove this text")
             LoadingIcon()
+
         }
     }
 
@@ -115,6 +116,7 @@ fun AdminManageScreen(
 fun AdminManage(
     users: List<UserData>,
     search: String,
+    navToProfile: (String) -> Unit,
     openBottomSheet: () -> Unit,
     onSearchChange: (String) -> Unit
 ) {
@@ -163,7 +165,7 @@ fun AdminManage(
             modifier = Modifier.fillMaxWidth()
         ) {
             items(users) { user ->
-                AdminManageUserCard(user) { /* Navigate to profile page */ }
+                AdminManageUserCard(user) { navToProfile(user.uid) }
             }
         }
     }

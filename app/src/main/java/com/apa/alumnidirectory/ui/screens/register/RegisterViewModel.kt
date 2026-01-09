@@ -2,7 +2,7 @@ package com.apa.alumnidirectory.ui.screens.register
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.apa.alumnidirectory.data.model.request.RegisterUserReq
+import com.apa.alumnidirectory.data.model.forms.RegisterForm
 import com.apa.alumnidirectory.data.model.ui.Country
 import com.apa.alumnidirectory.data.model.ui.State
 import com.apa.alumnidirectory.data.repo.AuthRepo
@@ -27,9 +27,9 @@ class RegisterViewModel @Inject constructor(
     val repo: AuthRepo
 ) : BaseViewModel() {
 
-    val countries: List<Country> = loadCountries(context)
     private var _finish = MutableSharedFlow<Unit>()
     val finish = _finish.asSharedFlow()
+    val countries: List<Country> = loadCountries(context)
     private val _selectedCountry = MutableStateFlow<Country?>(null)
     val selectedCountry = _selectedCountry.asStateFlow()
 
@@ -76,7 +76,7 @@ class RegisterViewModel @Inject constructor(
     }
 
 
-    fun register(userReq: RegisterUserReq) {
+    fun register(userReq: RegisterForm) {
         if (!validateRegisterFields(userReq)) return
         viewModelScope.launch {
             val success = safeApiCall {
