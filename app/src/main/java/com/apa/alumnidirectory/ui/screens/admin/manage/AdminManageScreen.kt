@@ -28,15 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.apa.alumnidirectory.data.enums.Sort
-import com.apa.alumnidirectory.data.enums.SortAdmin
-import com.apa.alumnidirectory.data.model.ui.DropdownData
 import com.apa.alumnidirectory.data.model.ui.FieldData
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.ui.components.bottomsheet.CustomBottomSheet
-import com.apa.alumnidirectory.ui.components.bottomsheet.sheetcontent.FilterSheetContent
 import com.apa.alumnidirectory.ui.components.cards.AdminManageUserCard
 import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.components.inputs.CustomFilterButton
@@ -82,7 +77,7 @@ fun AdminManageScreen(
 //            { viewModel.clearFilters() },
 //            filter.country,
 //            DropdownData(
-//                SortAdmin.entries.map { it.value },
+//                Sort.entries.map { it.value },
 //                selectedSort,
 //                viewModel::onSortSelected
 //            ),
@@ -106,6 +101,12 @@ fun AdminManageScreen(
 //                selectedYear,
 //                viewModel::onGradYearSelect
 //            ),
+//              DropdownData(
+//                  options.status,
+//                  selectedStatus,
+//                  viewModel::onStatusSelect
+//              ),
+//            true
 //        )
     }
 }
