@@ -33,7 +33,7 @@ fun FilterSheetContent(
     techStackData: DropdownData,
     countryData: DropdownData,
     stateData: DropdownData,
-    yearData:DropdownData
+    yearData: DropdownData
 ) {
     var selectedFilter by remember { mutableStateOf(Filter.entries.first().value) }
     Column(
@@ -50,6 +50,7 @@ fun FilterSheetContent(
         CustomDropdown(
             Filter.entries.map { it.value },
             selectedFilter,
+            itemLabel = { it }
         ) {
             selectedFilter = it
         }
@@ -74,7 +75,8 @@ fun FilterSheetContent(
                 )
                 CustomDropdown(
                     techStackData.list,
-                    techStackData.selectedItem
+                    techStackData.selectedItem,
+                    itemLabel = { it }
                 ) { techStackData.onSelected(it) }
             }
         }
@@ -99,7 +101,8 @@ fun FilterSheetContent(
                 )
                 CustomDropdown(
                     countryData.list,
-                    countryData.selectedItem
+                    countryData.selectedItem,
+                    itemLabel = { it }
                 ) { countryData.onSelected(it) }
             }
             Column(
@@ -116,7 +119,8 @@ fun FilterSheetContent(
                 CustomDropdown(
                     stateData.list,
                     stateData.selectedItem,
-                    countrySelection != null
+                    countrySelection != null,
+                    itemLabel = { it }
                 ) { stateData.onSelected(it) }
             }
         }
@@ -141,7 +145,8 @@ fun FilterSheetContent(
                 )
                 CustomDropdown(
                     yearData.list,
-                    yearData.selectedItem
+                    yearData.selectedItem,
+                    itemLabel = { it }
                 ) { yearData.onSelected(it) }
             }
         }
@@ -161,6 +166,7 @@ fun FilterSheetContent(
         CustomDropdown(
             sortData.list,
             sortData.selectedItem,
+            itemLabel = { it }
         ) {
             sortData.onSelected(it)
         }
