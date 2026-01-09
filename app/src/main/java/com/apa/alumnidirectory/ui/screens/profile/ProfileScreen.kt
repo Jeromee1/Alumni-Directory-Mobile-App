@@ -40,6 +40,7 @@ import com.apa.alumnidirectory.data.enums.PreferredContact
 import com.apa.alumnidirectory.data.model.user.ContactInfo
 import com.apa.alumnidirectory.data.model.user.Location
 import com.apa.alumnidirectory.data.model.user.UserData
+import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.components.pfp.DefaultPfp
 import com.apa.alumnidirectory.ui.components.pfp.Pfp1
 import com.apa.alumnidirectory.ui.components.pfp.Pfp2
@@ -53,12 +54,20 @@ import com.apa.alumnidirectory.ui.theme.Website
 
 @Composable
 fun ProfileScreen(
-//    uid: String,
     navController: NavController
 ) {
-//    Profile() {
+    if(/* User exists now */ false) {
+//    Profile(/* User */) {
 //        navController.navigate(Screen.EditProfile())
 //    }
+     } else {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            LoadingIcon()
+        }
+    }
 }
 
 @Composable

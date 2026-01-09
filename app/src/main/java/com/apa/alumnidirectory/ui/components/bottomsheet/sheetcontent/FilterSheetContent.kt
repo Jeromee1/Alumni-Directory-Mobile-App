@@ -33,7 +33,7 @@ fun FilterSheetContent(
     techStackData: DropdownData,
     countryData: DropdownData,
     stateData: DropdownData,
-    yearData:DropdownData
+    yearData:DropdownData,
 ) {
     var selectedFilter by remember { mutableStateOf(Filter.entries.first().value) }
     Column(

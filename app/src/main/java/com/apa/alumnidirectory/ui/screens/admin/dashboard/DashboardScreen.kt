@@ -1,5 +1,7 @@
 package com.apa.alumnidirectory.ui.screens.admin.dashboard
 
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.apa.alumnidirectory.data.model.ui.DashboardUiState
 import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 
@@ -35,6 +38,42 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    DashBoard(
+        uiState,
+        { navController.navigate(Screen.AdminPending) },
+        { navController.navigate(Screen.AdminAppeals) },
+        { navController.navigate(Screen.AdminManage) }
+    )
+}
+
+@Composable
+fun DashBoard(
+    uiState: DashboardUiState,
+    navToPending: () -> Unit,
+    navToAppeals: () -> Unit,
+    navToManage: () -> Unit
+) {
+    val approvedCount by animateIntAsState(
+        targetValue = uiState.approvedCount,
+        animationSpec = tween(800),
+    )
+
+    val recentApprovedCount by animateIntAsState(
+        targetValue = uiState.recentApprovedCount,
+        animationSpec = tween(800),
+    )
+
+    val pendingCount by animateIntAsState(
+        targetValue = uiState.pendingCount,
+        animationSpec = tween(800),
+    )
+
+    val appealCount by animateIntAsState(
+        targetValue = uiState.appealCount,
+        animationSpec = tween(800),
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -77,7 +116,7 @@ fun DashboardScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("${uiState.approvedCount}",
+                        Text("$approvedCount",
                             fontSize = 40.sp,
                             fontWeight = FontWeight.Bold)
                         Text("Total", fontWeight = FontWeight.Bold)
@@ -93,7 +132,7 @@ fun DashboardScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("${uiState.recentApprovedCount}",
+                        Text("$recentApprovedCount",
                             fontSize = 40.sp,
                             fontWeight = FontWeight.Bold)
                         Text("Recent", fontWeight = FontWeight.Bold)
@@ -115,7 +154,7 @@ fun DashboardScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("${uiState.pendingCount}",
+                        Text("$pendingCount",
                             fontSize = 40.sp,
                             fontWeight = FontWeight.Bold)
                         Text("Pending", fontWeight = FontWeight.Bold)
@@ -131,7 +170,7 @@ fun DashboardScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("${uiState.appealCount}",
+                        Text("$appealCount",
                             fontSize = 40.sp,
                             fontWeight = FontWeight.Bold)
                         Text("Appeals", fontWeight = FontWeight.Bold)
@@ -152,7 +191,7 @@ fun DashboardScreen(
                 horizontalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 Button(
-                    onClick = { navController.navigate(Screen.AdminPending) },
+                    onClick = { navToPending() },
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
@@ -165,7 +204,7 @@ fun DashboardScreen(
                     )
                 }
                 Button(
-                    onClick = {  },
+                    onClick = { navToAppeals() },
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
@@ -179,7 +218,7 @@ fun DashboardScreen(
                 }
             }
             Button(
-                onClick = {  },
+                onClick = { navToManage() },
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),

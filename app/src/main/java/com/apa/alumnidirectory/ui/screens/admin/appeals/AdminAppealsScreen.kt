@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.model.request.AppealReq
 import com.apa.alumnidirectory.ui.components.cards.AdminAppealsUserCard
+import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.Primary
 import com.apa.alumnidirectory.ui.theme.SecondaryG
@@ -50,19 +51,28 @@ fun AdminAppealsScreen(
     val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val pullState = rememberPullToRefreshState()
 
-    AdminAppeals(
-        if (showUnresolved) unresolvedAppeals else appeals,
-        refreshing,
-        pullState,
-        viewModel::refresh,
-        {
-            navController.navigate(
-                Screen.AdminAppealsDetails(it)
-            )
-        },
-        showUnresolved
-    )
-    { showUnresolved = !showUnresolved }
+    if(appeals.isNotEmpty()) {
+        AdminAppeals(
+            if (showUnresolved) unresolvedAppeals else appeals,
+            refreshing,
+            pullState,
+            viewModel::refresh,
+            {
+                navController.navigate(
+                    Screen.AdminAppealsDetails(it)
+                )
+            },
+            showUnresolved
+        )
+        { showUnresolved = !showUnresolved }
+    } else {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            LoadingIcon()
+        }
+    }
 }
 
 @Composable
