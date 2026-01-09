@@ -30,6 +30,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.model.request.AppealReq
+import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.Danger
 import com.apa.alumnidirectory.ui.theme.Primary
 import com.apa.alumnidirectory.ui.theme.SecondaryG
@@ -49,6 +50,7 @@ fun AdminAppealsDetailsScreen(
     appeal?.let {
         AdminAppealsDetails(
             appeal,
+            { navController.navigate(Screen.Profile(it)) },
             viewModel::approveUser,
             viewModel::rejectUser
         )
@@ -58,6 +60,7 @@ fun AdminAppealsDetailsScreen(
 @Composable
 fun AdminAppealsDetails(
     details: AppealReq,
+    navToProfile: (String) -> Unit,
     onApprove: () -> Unit,
     onReject: () -> Unit
 ) {
@@ -116,7 +119,7 @@ fun AdminAppealsDetails(
             ) {
                 Text(
                     "Visit profile",
-                    modifier = Modifier.clickable { /* navigate to profile */ },
+                    modifier = Modifier.clickable { navToProfile(details.userUid) },
                     color = Primary
                 )
             }

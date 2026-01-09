@@ -31,6 +31,7 @@ import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.ui.components.cards.AdminManageUserCard
 import com.apa.alumnidirectory.ui.components.inputs.CustomFilterButton
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextField
+import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 
 @Composable
@@ -46,15 +47,20 @@ fun AdminManageScreen(
             graduationYear = "2025"
         ),
 
-    )
+        )
 
-    AdminManage(tempUsers, search) { search = it }
+    AdminManage(
+        tempUsers,
+        search,
+        { navController.navigate(Screen.Profile(it)) })
+    { search = it }
 }
 
 @Composable
 fun AdminManage(
     users: List<UserData>,
     search: String,
+    navToProfile: (String) -> Unit,
     onSearchChange: (String) -> Unit
 ) {
     Column(
@@ -102,7 +108,7 @@ fun AdminManage(
             modifier = Modifier.fillMaxWidth()
         ) {
             items(users) { user ->
-                AdminManageUserCard(user) { /* Navigate to profile page */ }
+                AdminManageUserCard(user) { navToProfile(user.uid) }
             }
         }
     }

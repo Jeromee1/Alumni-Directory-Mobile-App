@@ -76,7 +76,7 @@ fun HomeScreen(
         pullState,
         viewModel::refresh,
         { navController.navigate(Screen.Dashboard) },
-        {/*navController.navigate(Screen.Profile)*/ },
+        { navController.navigate(Screen.Profile(it)) },
         { scope.launch { bottomSheetState.show() } },
         viewModel::onSearchChange
     )
@@ -200,20 +200,20 @@ fun Home(
                     )
                 }
             }
-        }
-        FloatingActionButton(
-            onClick = { /* Nav to profile(self) */ },
-            containerColor = Primary,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .size(80.dp)
-                .padding(8.dp),
-            shape = RoundedCornerShape(100)
-        ) {
-            Icon(
-                Icons.Outlined.Person, "",
-                modifier = Modifier.size(44.dp)
-            )
+            FloatingActionButton(
+                onClick = { navToProfile(it.uid) },
+                containerColor = Primary,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .size(80.dp)
+                    .padding(8.dp),
+                shape = RoundedCornerShape(100)
+            ) {
+                Icon(
+                    Icons.Outlined.Person, "",
+                    modifier = Modifier.size(44.dp)
+                )
+            }
         }
     }
 }

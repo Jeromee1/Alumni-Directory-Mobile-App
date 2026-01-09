@@ -18,7 +18,7 @@ class AdminAppealsDetailsViewModel @Inject constructor(
     val repo: AuthRepo,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
-    val uid: String = savedStateHandle.get<String>("appealId") ?: ""
+    val uid: String = savedStateHandle.get<String>("appealId")!!
 
     private var _finish = MutableSharedFlow<Unit>()
     val finish = _finish.asSharedFlow()
