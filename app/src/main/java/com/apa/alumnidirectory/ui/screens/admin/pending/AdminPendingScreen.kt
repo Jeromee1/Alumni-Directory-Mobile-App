@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.ui.components.cards.AdminPendingUserCard
+import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 
 @Composable
@@ -31,7 +32,21 @@ fun AdminPendingScreen(
     viewModel: AdminPendingViewModel = hiltViewModel()
 ) {
     val users by viewModel.pendingUsers.collectAsStateWithLifecycle()
-    AdminPending(users, viewModel::approveUser, viewModel::rejectUser)
+
+    if(users.isNotEmpty()) {
+        AdminPending(
+            users,
+            viewModel::approveUser,
+            viewModel::rejectUser
+        )
+    } else {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            LoadingIcon()
+        }
+    }
 }
 
 @Composable
@@ -55,7 +70,7 @@ fun AdminPending(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                "Pending Users: ${users.size}",
+                "All Pending Users",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )

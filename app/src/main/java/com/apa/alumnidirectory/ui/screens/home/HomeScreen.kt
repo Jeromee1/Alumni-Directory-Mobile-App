@@ -41,6 +41,7 @@ import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.ui.components.bottomsheet.CustomBottomSheet
 import com.apa.alumnidirectory.ui.components.bottomsheet.sheetcontent.FilterSheetContent
 import com.apa.alumnidirectory.ui.components.cards.HomeUserCard
+import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.components.inputs.CustomFilterButton
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextField
 import com.apa.alumnidirectory.ui.nav.Screen
@@ -68,18 +69,27 @@ fun HomeScreen(
 
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    Home(
-        user,
-        users,
-        filter.query,
-        refreshing,
-        pullState,
-        viewModel::refresh,
-        { navController.navigate(Screen.Dashboard) },
-        { navController.navigate(Screen.Profile(it)) },
-        { scope.launch { bottomSheetState.show() } },
-        viewModel::onSearchChange
-    )
+    if(users.isNotEmpty()) {
+        Home(
+            user,
+            users,
+            filter.query,
+            refreshing,
+            pullState,
+            viewModel::refresh,
+            { navController.navigate(Screen.Dashboard) },
+            {navController.navigate(Screen.Profile(it)) },
+            { scope.launch { bottomSheetState.show() } },
+            viewModel::onSearchChange
+        )
+    } else {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            LoadingIcon()
+        }
+    }
 
     val selectedSort = filter.sort
     val selectedTechStack = filter.techStack ?: FilterPlaceholders.STACK

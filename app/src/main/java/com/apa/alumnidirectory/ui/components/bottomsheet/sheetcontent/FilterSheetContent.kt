@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.apa.alumnidirectory.data.enums.Filter
+import com.apa.alumnidirectory.data.enums.Status
 import com.apa.alumnidirectory.data.model.ui.DropdownData
 import com.apa.alumnidirectory.ui.components.inputs.CustomDropdown
 
@@ -33,7 +34,9 @@ fun FilterSheetContent(
     techStackData: DropdownData,
     countryData: DropdownData,
     stateData: DropdownData,
-    yearData: DropdownData
+    yearData:DropdownData,
+    statusData: DropdownData? = null,
+    showStatus: Boolean = false
 ) {
     var selectedFilter by remember { mutableStateOf(Filter.entries.first().value) }
     Column(
@@ -48,7 +51,7 @@ fun FilterSheetContent(
             color = Color.Black
         )
         CustomDropdown(
-            Filter.entries.map { it.value },
+            Filter.entries.filter { showStatus || it != Filter.STATUS }.map { it.value },
             selectedFilter,
             itemLabel = { it }
         ) {
@@ -148,6 +151,36 @@ fun FilterSheetContent(
                     yearData.selectedItem,
                     itemLabel = { it }
                 ) { yearData.onSelected(it) }
+            }
+        }
+    }
+    //Status
+    if (
+        selectedFilter == Filter.STATUS.value &&
+        statusData != null
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "Status",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                CustomDropdown(
+                    Status.entries.map { status ->
+                        status.value.replaceFirstChar { it.uppercase() } },
+                    statusData.selectedItem,
+                    itemLabel = {it}
+                ) { statusData.onSelected(it) }
             }
         }
     }

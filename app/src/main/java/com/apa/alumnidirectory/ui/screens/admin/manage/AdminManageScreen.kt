@@ -14,11 +14,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,32 +31,85 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.model.ui.FieldData
 import com.apa.alumnidirectory.data.model.user.UserData
+import com.apa.alumnidirectory.ui.components.bottomsheet.CustomBottomSheet
 import com.apa.alumnidirectory.ui.components.cards.AdminManageUserCard
+import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.components.inputs.CustomFilterButton
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextField
 import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.SecondaryG
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminManageScreen(
-    navController: NavController
+    navController: NavController,
+//    viewModel: AdminManageViewModel = hiltViewModel()
 ) {
+    val scope = rememberCoroutineScope()
+
     var search by remember { mutableStateOf("") }
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    val tempUsers = listOf(
-        UserData(
-            uid = "123",
-            fullName = "John Doe",
-            graduationYear = "2025"
-        ),
+    if (/* user list empty */ false) {
+//    AdminManage(
+        //    User stuff here,
+        //    search,
+//        { scope.launch { bottomSheetState.show() } }
+        //    ) { search = it }
+    } else {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
 
-        )
+            Text("Its set to load forever, do the manage backend stuff and remove this text")
+            LoadingIcon()
 
-    AdminManage(
-        tempUsers,
-        search,
-        { navController.navigate(Screen.Profile(it)) })
-    { search = it }
+        }
+    }
+
+    CustomBottomSheet(
+        bottomSheetState,
+        { scope.launch { bottomSheetState.hide() } }
+    ) {
+        //Add viewModel then uncomment
+//        FilterSheetContent(
+//            { viewModel.clearFilters() },
+//            filter.country,
+//            DropdownData(
+//                Sort.entries.map { it.value },
+//                selectedSort,
+//                viewModel::onSortSelected
+//            ),
+//            DropdownData(
+//                options.techStacks,
+//                selectedTechStack,
+//                viewModel::onPrimaryStackSelected
+//            ),
+//            DropdownData(
+//                options.countries,
+//                selectedCountry,
+//                viewModel::onCountrySelect
+//            ),
+//            DropdownData(
+//                options.states,
+//                selectedState,
+//                viewModel::onStateSelect
+//            ),
+//            DropdownData(
+//                options.years,
+//                selectedYear,
+//                viewModel::onGradYearSelect
+//            ),
+//              DropdownData(
+//                  options.status,
+//                  selectedStatus,
+//                  viewModel::onStatusSelect
+//              ),
+//            true
+//        )
+    }
 }
 
 @Composable
@@ -61,6 +117,7 @@ fun AdminManage(
     users: List<UserData>,
     search: String,
     navToProfile: (String) -> Unit,
+    openBottomSheet: () -> Unit,
     onSearchChange: (String) -> Unit
 ) {
     Column(
@@ -78,7 +135,7 @@ fun AdminManage(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                "Manage Users: ${users.size}",
+                "All Users",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -101,7 +158,7 @@ fun AdminManage(
                     .weight(0.3f)
                     .fillMaxHeight()
             ) {
-                CustomFilterButton { }
+                CustomFilterButton { openBottomSheet() }
             }
         }
         LazyColumn(

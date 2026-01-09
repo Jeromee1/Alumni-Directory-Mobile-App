@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.model.request.AppealReq
 import com.apa.alumnidirectory.ui.nav.Screen
+import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.theme.Danger
 import com.apa.alumnidirectory.ui.theme.Primary
 import com.apa.alumnidirectory.ui.theme.SecondaryG
@@ -47,13 +48,20 @@ fun AdminAppealsDetailsScreen(
             navController.popBackStack()
         }
     }
-    appeal?.let {
+    if(appeal != null) {
         AdminAppealsDetails(
             appeal,
             { navController.navigate(Screen.Profile(it)) },
             viewModel::approveUser,
             viewModel::rejectUser
         )
+    } else {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            LoadingIcon()
+        }
     }
 }
 

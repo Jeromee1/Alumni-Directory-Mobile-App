@@ -52,6 +52,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.ui.components.confirmation.CustomDialog
+import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.components.pfp.DefaultPfp
 import com.apa.alumnidirectory.ui.components.pfp.Pfp1
 import com.apa.alumnidirectory.ui.components.pfp.Pfp2
@@ -81,9 +82,9 @@ fun ProfileScreen(
     val perms = viewModel.permissionCheck()
 
     val user by viewModel.user.collectAsStateWithLifecycle()
-    user?.let {
+    if (user != null) {
         Profile(
-            it,
+            user,
             perms,
             { dialogTitle = it },
             { dialogText = it },
@@ -95,6 +96,13 @@ fun ProfileScreen(
             },
             { showDialog = true }) {
             navController.navigate(Screen.EditProfile(it.uid))
+        }
+    } else {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            LoadingIcon()
         }
         if (showDialog) {
             CustomDialog(
@@ -108,6 +116,8 @@ fun ProfileScreen(
         }
     }
 }
+
+
 
 @Composable
 fun Profile(
@@ -425,4 +435,3 @@ fun Profile(
         }
     }
 }
-
