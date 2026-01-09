@@ -76,12 +76,13 @@ fun ProfileScreen(
     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     var showDialog by remember { mutableStateOf(false) }
     var dialogText by remember { mutableStateOf("") }
-    var dialogIcon by remember { mutableStateOf<ImageVector>(Icons.Filled.Phone) }
+    var dialogIcon by remember { mutableStateOf(Icons.Filled.Phone) }
     var dialogTitle by remember { mutableStateOf("") }
 
     val perms = viewModel.permissionCheck()
 
-    val user by viewModel.user.collectAsStateWithLifecycle()
+    val _user by viewModel.user.collectAsStateWithLifecycle()
+    val user = _user
     if (user != null) {
         Profile(
             user,
@@ -95,7 +96,7 @@ fun ProfileScreen(
                     .show()
             },
             { showDialog = true }) {
-            navController.navigate(Screen.EditProfile(it.uid))
+            navController.navigate(Screen.EditProfile(user.uid))
         }
     } else {
         Box(
@@ -104,19 +105,18 @@ fun ProfileScreen(
         ) {
             LoadingIcon()
         }
-        if (showDialog) {
-            CustomDialog(
-                { showDialog = false },
-                { showDialog = false },
-                dialogTitle,
-                dialogText,
-                dialogIcon,
-                false
-            )
-        }
+    }
+    if (showDialog) {
+        CustomDialog(
+            { showDialog = false },
+            { showDialog = false },
+            dialogTitle,
+            dialogText,
+            dialogIcon,
+            false
+        )
     }
 }
-
 
 
 @Composable
@@ -418,20 +418,20 @@ fun Profile(
             Spacer(Modifier.height(40.dp))
         }
         if (perms)
-        FloatingActionButton(
-            onClick = { navToEdit() },
-            containerColor = Primary,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(20.dp)
-                .size(80.dp)
-                .padding(8.dp),
-            shape = RoundedCornerShape(100)
-        ) {
-            Icon(
-                Icons.Filled.Edit, "",
-                modifier = Modifier.size(44.dp)
-            )
-        }
+            FloatingActionButton(
+                onClick = { navToEdit() },
+                containerColor = Primary,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(20.dp)
+                    .size(80.dp)
+                    .padding(8.dp),
+                shape = RoundedCornerShape(100)
+            ) {
+                Icon(
+                    Icons.Filled.Edit, "",
+                    modifier = Modifier.size(44.dp)
+                )
+            }
     }
 }
