@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.apa.alumnidirectory.data.enums.Status
 import com.apa.alumnidirectory.data.model.request.AppealReq
 import com.apa.alumnidirectory.data.model.user.CurrentUser
+import com.apa.alumnidirectory.data.model.user.FirebaseData
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.data.repo.AuthRepo
 import com.apa.alumnidirectory.service.FirebaseAuthService
@@ -23,6 +24,9 @@ class PendingViewModel @Inject constructor(
     private var _currentUser = MutableStateFlow<Pair<String, CurrentUser?>>(Pair("", null))
     val currentUser = _currentUser.asStateFlow()
 
+    private var _firebaseUser = MutableStateFlow<FirebaseData?>(null)
+    val firebaseUser = _firebaseUser.asStateFlow()
+
     init {
         updateCurrentUser()
     }
@@ -33,6 +37,7 @@ class PendingViewModel @Inject constructor(
                 firebaseAuth.getCurrentUser()?.let { user ->
                     val userData = repo.fetchProfile(user.uid)
                     val msg = fetchMessage(userData)
+                    _firebaseUser.update { user }
                     _currentUser.update {
                         it.copy(
                             first = msg,
@@ -47,7 +52,7 @@ class PendingViewModel @Inject constructor(
         }
     }
 
-    fun fetchMessage(user: UserData): String {
+    private fun fetchMessage(user: UserData): String {
         return when (user.status) {
             Status.PENDING.value -> "Pending Approval"
             Status.REJECTED.value -> "Registration Rejected"
@@ -56,17 +61,28 @@ class PendingViewModel @Inject constructor(
         }
     }
 
-    fun submitAppeal() {
-        //This is a test function
+    fun submitAppeal(text: String) {
         viewModelScope.launch {
             _currentUser.value.second?.userData?.let {
                 safeApiCall {
-                    repo.submitAppeal(AppealReq(
-                        userUid = it.uid,
-                        name = it.fullName,
-                        email = it.email,
-                        msg = "document uid test"
-                    ))
+                    repo.submitAppeal(
+                        AppealReq(
+                            userUid = it.uid,
+                            name = it.fullName,
+                            email = it.email,
+                            msg = text
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    fun signOut() {
+        viewModelScope.launch {
+            safeApiCall {
+                firebaseAuth.logout().let {
+                    _firebaseUser.value = null
                 }
             }
         }

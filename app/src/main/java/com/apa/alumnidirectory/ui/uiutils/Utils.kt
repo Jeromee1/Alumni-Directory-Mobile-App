@@ -37,3 +37,9 @@ object FilterPlaceholders {
     const val STACK = "Tech Stack"
 }
 
+fun timeCheckForAppeal(time: Long): Boolean {
+    val hours24 = 24 * 60 * 60 * 1000L
+    val now = System.currentTimeMillis()
+    return now - time >= hours24
+}
+

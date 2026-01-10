@@ -23,7 +23,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,8 +42,11 @@ import com.apa.alumnidirectory.data.enums.Status
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.ui.components.bottomsheet.CustomBottomSheet
 import com.apa.alumnidirectory.ui.components.bottomsheet.sheetcontent.PendingSheetContent
+import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.SecondaryG
+import com.apa.alumnidirectory.ui.uiutils.timeCheckForAppeal
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +59,9 @@ fun PendingScreen(
 
     val currentUser = viewModel.currentUser.collectAsStateWithLifecycle().value
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var isLoading by remember { mutableStateOf(true) }
+    var submitted by remember { mutableIntStateOf(0) }
+
 
     LaunchedEffect(currentUser) {
         val status = currentUser.second?.userData?.status
@@ -61,19 +72,49 @@ fun PendingScreen(
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.firebaseUser.filterNotNull().collect {
+            isLoading = false
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.firebaseUser.collect {
+            if (it == null && !isLoading) {
+                navController.popBackStack()
+            }
+        }
+    }
+
+
     currentUser.second?.let {
-        Pending(
-            currentUser.first,
-            it.userData
-        ) { scope.launch { bottomSheetState.show() } }
+        if (!isLoading) {
+            Pending(
+                currentUser.first,
+                it.userData,
+                submitted,
+                viewModel::signOut
+            ) { scope.launch { bottomSheetState.show() } }
+        } else {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                LoadingIcon()
+            }
+        }
 
         CustomBottomSheet(
             bottomSheetState,
             { scope.launch { bottomSheetState.hide() } }
         ) {
             PendingSheetContent(
-                "Contact Admin"
-            ) { /* Submit logic here */ }
+                "Contact Admin",
+            ) {
+                viewModel.submitAppeal(it)
+                scope.launch { bottomSheetState.hide() }
+                submitted++
+            }
         }
     }
 }
@@ -82,6 +123,8 @@ fun PendingScreen(
 fun Pending(
     statusMsg: String,
     user: UserData,
+    hasSubmitted: Int,
+    logout: () -> Unit,
     openBottomSheet: () -> Unit
 ) {
     Box(
@@ -172,24 +215,27 @@ fun Pending(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
-                modifier = Modifier
-                    .width(200.dp),
-                shape = RoundedCornerShape(12.dp),
-                onClick = { openBottomSheet() }
-            ) {
-                Text(
-                    "Contact Admin",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(8.dp)
-                )
+            if (timeCheckForAppeal(user.createdAt)) {
+                Button(
+                    modifier = Modifier
+                        .width(200.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    onClick = { if (hasSubmitted == 0) openBottomSheet() },
+                ) {
+                    Text(
+                        if (hasSubmitted > 0) "Submitted" else "Contact Admin",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (hasSubmitted > 0) Color.LightGray else Color.White,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
             }
             Button(
                 modifier = Modifier
                     .width(200.dp),
                 shape = RoundedCornerShape(12.dp),
-                onClick = { /* Logout */ }
+                onClick = { logout() }
             ) {
                 Text(
                     "Logout",

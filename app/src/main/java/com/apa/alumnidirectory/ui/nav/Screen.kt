@@ -13,7 +13,7 @@ sealed class Screen {
     @Serializable object AdminManage: Screen()
     @Serializable object AdminAppeals: Screen()
     @Serializable data class AdminAppealsDetails(val appealId: String): Screen()
-    @Serializable data class Profile(val userUid: String): Screen()
+    @Serializable data class Profile(val userUid: String, val isAdmin: Boolean): Screen()
     @Serializable data class EditProfile(val userUid: String): Screen()
 
 }

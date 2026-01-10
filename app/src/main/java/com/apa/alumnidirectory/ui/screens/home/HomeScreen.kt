@@ -78,7 +78,7 @@ fun HomeScreen(
             pullState,
             viewModel::refresh,
             { navController.navigate(Screen.Dashboard) },
-            {navController.navigate(Screen.Profile(it)) },
+            {navController.navigate(Screen.Profile(it, isAdmin = false)) },
             { scope.launch { bottomSheetState.show() } },
             viewModel::onSearchChange
         )

@@ -1,6 +1,5 @@
 package com.apa.alumnidirectory.ui.base
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,7 +15,7 @@ import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 open class BaseViewModel : ViewModel() {
-    private val _toast = MutableSharedFlow<String>()
+    protected val _toast = MutableSharedFlow<String>()
     val toast = _toast.asSharedFlow()
     suspend fun <T> safeApiCall(func: suspend () -> T?): T? {
         return try {
@@ -25,7 +24,7 @@ open class BaseViewModel : ViewModel() {
             }
             result
         } catch (e: Exception) {
-            Log.d("debug", e.message.toString())
+            if(e.message == "Email in-use") _toast.emit(e.message.toString())
             null
         }
     }

@@ -117,7 +117,7 @@ class AuthRepoImpl @Inject constructor(
 
     override suspend fun fetchUnresolvedAppeal(): List<AppealReq> {
         val snapshot = dbAppealRef
-            .whereEqualTo("isResolved", false)
+            .whereEqualTo("resolved", false)
             .get()
             .await()
 

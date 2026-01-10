@@ -83,6 +83,7 @@ class RegisterViewModel @Inject constructor(
                 repo.register(userReq)
             }
             if (success != null) {
+                _toast.emit("Registration Successful")
                 _finish.emit(Unit)
             }
         }

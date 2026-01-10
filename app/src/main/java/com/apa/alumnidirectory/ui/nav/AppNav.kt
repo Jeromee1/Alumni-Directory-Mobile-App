@@ -68,7 +68,7 @@ fun AppNav() {
 
 @Composable
 fun Nav(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.Profile) {
+    NavHost(navController = navController, startDestination = Screen.Login) {
         composable<Screen.Home> { HomeScreen(navController) }
         composable<Screen.Login> { LoginScreen(navController) }
         composable<Screen.Register> { RegisterScreen(navController) }
@@ -78,7 +78,9 @@ fun Nav(navController: NavHostController) {
         composable<Screen.AdminManage> { AdminManageScreen(navController) }
         composable<Screen.AdminAppeals> { AdminAppealsScreen(navController) }
         composable<Screen.AdminAppealsDetails> { AdminAppealsDetailsScreen(navController) }
-        composable<Screen.Profile> { ProfileScreen(navController) }
+        composable<Screen.Profile> { entry ->
+            val adminEntry = entry.savedStateHandle.get<Boolean>("isAdmin") ?: false
+            ProfileScreen(isAdmin = adminEntry, navController) }
         composable<Screen.EditProfile> { EditProfileScreen(navController) }
     }
 }

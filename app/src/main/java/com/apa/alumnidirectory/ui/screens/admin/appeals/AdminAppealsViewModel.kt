@@ -21,10 +21,6 @@ class AdminAppealsViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
-    init {
-        fetchAppeals()
-    }
-
     fun fetchAppeals() {
         viewModelScope.launch {
             safeApiCall {
