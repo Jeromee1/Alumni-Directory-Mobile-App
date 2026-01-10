@@ -176,10 +176,9 @@ fun FilterSheetContent(
                     color = Color.Black
                 )
                 CustomDropdown(
-                    Status.entries.map { status ->
-                        status.value.replaceFirstChar { it.uppercase() } },
+                    Status.entries.map { it.value },
                     statusData.selectedItem,
-                    itemLabel = {it}
+                    itemLabel = { it.replaceFirstChar { it.uppercase() } }
                 ) { statusData.onSelected(it) }
             }
         }
