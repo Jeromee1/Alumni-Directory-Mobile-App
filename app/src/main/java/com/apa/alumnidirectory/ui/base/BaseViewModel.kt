@@ -15,7 +15,7 @@ import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 open class BaseViewModel : ViewModel() {
-    internal val _toast = MutableSharedFlow<String>()
+    protected val _toast = MutableSharedFlow<String>()
     val toast = _toast.asSharedFlow()
     suspend fun <T> safeApiCall(func: suspend () -> T?): T? {
         return try {
