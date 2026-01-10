@@ -8,7 +8,6 @@ import com.apa.alumnidirectory.data.model.forms.AdminEditProfileForm
 import com.apa.alumnidirectory.data.model.forms.EditProfileForm
 import com.apa.alumnidirectory.data.model.forms.RegisterForm
 import com.apa.alumnidirectory.data.model.request.LoginReq
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -16,7 +15,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
-@HiltViewModel
 open class BaseViewModel : ViewModel() {
     private val _toast = MutableSharedFlow<String>()
     val toast = _toast.asSharedFlow()

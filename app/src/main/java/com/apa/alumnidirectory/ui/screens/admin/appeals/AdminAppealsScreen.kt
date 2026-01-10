@@ -1,5 +1,12 @@
 package com.apa.alumnidirectory.ui.screens.admin.appeals
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -75,6 +82,7 @@ fun AdminAppealsScreen(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AdminAppeals(
     appeals: List<AppealReq>,
@@ -90,7 +98,6 @@ fun AdminAppeals(
             .fillMaxSize()
             .padding(20.dp)
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize(),
@@ -104,11 +111,19 @@ fun AdminAppeals(
                     .padding(20.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    if (showUnresolved) "Pending Appeals" else "All Appeals",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                AnimatedContent(
+                    targetState = showUnresolved,
+                    transitionSpec = {
+                        (slideInHorizontally { it } + fadeIn())
+                            .togetherWith(slideOutHorizontally { -it } + fadeOut())
+                    }
+                ) { unresolved ->
+                    Text(
+                        if (unresolved) "Pending Appeals" else "All Appeals",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
             PullToRefreshBox(
                 isRefreshing = refreshing,

@@ -23,6 +23,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Gite
@@ -57,6 +58,7 @@ import com.apa.alumnidirectory.ui.components.pfp.DefaultPfp
 import com.apa.alumnidirectory.ui.components.pfp.Pfp1
 import com.apa.alumnidirectory.ui.components.pfp.Pfp2
 import com.apa.alumnidirectory.ui.nav.Screen
+import com.apa.alumnidirectory.ui.theme.Danger
 import com.apa.alumnidirectory.ui.theme.Email
 import com.apa.alumnidirectory.ui.theme.Github
 import com.apa.alumnidirectory.ui.theme.LinkedIn
@@ -95,6 +97,7 @@ fun ProfileScreen(
                 Toast.makeText(context, "Copied to Clipboard", Toast.LENGTH_SHORT)
                     .show()
             },
+            { /* Logout Logic */ },
             { showDialog = true }) {
             navController.navigate(Screen.EditProfile(user.uid))
         }
@@ -127,8 +130,9 @@ fun Profile(
     dialogTextChange: (String) -> Unit,
     dialogIconChange: (ImageVector) -> Unit,
     copyToClipboard: (String, String) -> Unit,
+    logout: () -> Unit,
     showDialog: () -> Unit,
-    navToEdit: () -> Unit,
+    navToEdit: () -> Unit
 ) {
     fun dialogTrigger(title: String, data: String, vector: ImageVector) {
         dialogTitleChange(title)
@@ -416,6 +420,23 @@ fun Profile(
                 )
             }
             Spacer(Modifier.height(40.dp))
+        }
+        FloatingActionButton(
+            onClick = { logout() },
+            containerColor = Primary,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(20.dp)
+                .size(80.dp)
+                .padding(8.dp),
+            shape = RoundedCornerShape(100)
+        ) {
+            Icon(
+                Icons.AutoMirrored.Filled.Logout,
+                "",
+                tint = Danger,
+                modifier = Modifier.size(44.dp)
+            )
         }
         if (perms)
             FloatingActionButton(

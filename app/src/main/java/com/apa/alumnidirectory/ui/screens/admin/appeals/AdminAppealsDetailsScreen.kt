@@ -14,12 +14,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,18 +39,27 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.model.request.AppealReq
+import com.apa.alumnidirectory.ui.components.bottomsheet.CustomBottomSheet
+import com.apa.alumnidirectory.ui.components.bottomsheet.sheetcontent.PendingSheetContent
+import com.apa.alumnidirectory.ui.components.confirmation.CustomDialog
 import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.theme.Danger
 import com.apa.alumnidirectory.ui.theme.Primary
 import com.apa.alumnidirectory.ui.theme.SecondaryG
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminAppealsDetailsScreen(
     navController: NavController,
     viewModel: AdminAppealsDetailsViewModel = hiltViewModel()
 ) {
+    val scope = rememberCoroutineScope()
+
     val appeal = viewModel.appeal.collectAsStateWithLifecycle().value
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.finish.collect {
@@ -52,9 +70,30 @@ fun AdminAppealsDetailsScreen(
         AdminAppealsDetails(
             appeal,
             { navController.navigate(Screen.Profile(it)) },
-            viewModel::approveUser,
-            viewModel::rejectUser
+            { showDialog = true },
+            { scope.launch { bottomSheetState.show() } }
         )
+
+        if(showDialog) {
+            CustomDialog(
+                { showDialog = false },
+                { /* Logic here */ },
+                "Approve user's appeal?",
+                "User would be allowed to gain access to the rest of the app.",
+                Icons.Filled.Warning
+            )
+        }
+
+        CustomBottomSheet(
+            bottomSheetState,
+            { scope.launch { bottomSheetState.hide() } }
+        ) {
+            PendingSheetContent(
+                "Reason for rejection. Again."
+            ) {
+                /* Logic here */
+            }
+        }
     } else {
         Box(
             modifier = Modifier.fillMaxSize(),
