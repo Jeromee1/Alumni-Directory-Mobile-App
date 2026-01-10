@@ -1,6 +1,5 @@
 package com.apa.alumnidirectory.ui.screens.profile
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.apa.alumnidirectory.data.model.user.CurrentUser
@@ -62,7 +61,6 @@ class ProfileViewModel @Inject constructor(
                 firebaseAuth.logout().let {
                     _currentUser.value = null
                 }
-                Log.d("debug", _currentUser.value.toString())
             }
         }
     }
