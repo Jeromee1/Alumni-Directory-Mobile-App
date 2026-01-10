@@ -83,9 +83,9 @@ fun HomeUserCard(
                             .border(2.dp, Color.LightGray, RoundedCornerShape(12.dp))
                     ) {
                         when (user.photoUrl) {
-                            0 -> DefaultPfp()
                             1 -> Pfp1()
                             2 -> Pfp2()
+                            else -> DefaultPfp()
                         }
                     }
                     Text(

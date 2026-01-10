@@ -8,5 +8,6 @@ data class FilterState(
     val state: String? = null,
     val year: String? = null,
     val techStack: String? = null,
+    val status: String? = null,
     val sort: String = Sort.DEFAULT.value
 )

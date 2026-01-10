@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -107,12 +108,12 @@ fun HomeScreen(
             DropdownData(
                 Sort.entries.map { it.value },
                 selectedSort,
-                viewModel::onSortSelected
+                viewModel::onSortSelect
             ),
             DropdownData(
                 options.techStacks,
                 selectedTechStack,
-                viewModel::onPrimaryStackSelected
+                viewModel::onPrimaryStackSelect
             ),
             DropdownData(
                 options.countries,
@@ -185,7 +186,8 @@ fun Home(
             ) {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(bottom = 88.dp)
                 ) {
                     items(users) { user ->
                         HomeUserCard(user) { navToProfile(user.uid) }

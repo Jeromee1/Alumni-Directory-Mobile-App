@@ -430,7 +430,7 @@ fun Profile(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp, 0.dp),
+                    .padding(start = 20.dp, end = 20.dp, bottom = 88.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(

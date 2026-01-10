@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -28,6 +27,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.apa.alumnidirectory.data.model.user.UserData
+import com.apa.alumnidirectory.ui.components.pfp.DefaultPfp
+import com.apa.alumnidirectory.ui.components.pfp.Pfp1
+import com.apa.alumnidirectory.ui.components.pfp.Pfp2
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 import com.apa.alumnidirectory.ui.theme.Text1
 
@@ -42,7 +44,8 @@ fun AdminManageUserCard(
             .background(
                 SecondaryG, RoundedCornerShape(12.dp)
             )
-            .padding(6.dp),
+            .padding(6.dp)
+            .clickable { onClick(user.uid) },
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent,
             contentColor = Text1
@@ -58,14 +61,12 @@ fun AdminManageUserCard(
                     .fillMaxSize(0.2f)
                     .aspectRatio(1f)
                     .background(Color.Gray, RoundedCornerShape(12.dp))
-                    .clickable { onClick(user.uid) }
             ) {
-                //Temp Pfp Image
-                Icon(
-                    Icons.Filled.Person, "",
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
+                when (user.photoUrl) {
+                    1 -> Pfp1()
+                    2 -> Pfp2()
+                    else -> DefaultPfp()
+                }
             }
             Column(
                 modifier = Modifier
