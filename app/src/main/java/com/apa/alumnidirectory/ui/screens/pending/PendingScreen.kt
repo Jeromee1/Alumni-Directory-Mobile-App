@@ -16,15 +16,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -32,16 +35,22 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.enums.Status
 import com.apa.alumnidirectory.data.model.user.UserData
+import com.apa.alumnidirectory.ui.components.bottomsheet.CustomBottomSheet
+import com.apa.alumnidirectory.ui.components.bottomsheet.sheetcontent.PendingSheetContent
 import com.apa.alumnidirectory.ui.nav.Screen
-import com.apa.alumnidirectory.ui.theme.Primary
 import com.apa.alumnidirectory.ui.theme.SecondaryG
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PendingScreen(
     navController: NavController,
     viewModel: PendingViewModel = hiltViewModel()
 ) {
+    val scope = rememberCoroutineScope()
+
     val currentUser = viewModel.currentUser.collectAsStateWithLifecycle().value
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     LaunchedEffect(currentUser) {
         val status = currentUser.second?.userData?.status
@@ -53,7 +62,19 @@ fun PendingScreen(
     }
 
     currentUser.second?.let {
-        Pending(currentUser.first, it.userData, viewModel::submitAppeal)
+        Pending(
+            currentUser.first,
+            it.userData
+        ) { scope.launch { bottomSheetState.show() } }
+
+        CustomBottomSheet(
+            bottomSheetState,
+            { scope.launch { bottomSheetState.hide() } }
+        ) {
+            PendingSheetContent(
+                "Contact Admin"
+            ) { /* Submit logic here */ }
+        }
     }
 }
 
@@ -61,7 +82,7 @@ fun PendingScreen(
 fun Pending(
     statusMsg: String,
     user: UserData,
-    submitAppeal: () -> Unit
+    openBottomSheet: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -146,44 +167,35 @@ fun Pending(
 
         Column(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
                 modifier = Modifier
                     .width(200.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Primary
-                ),
                 shape = RoundedCornerShape(12.dp),
-                onClick = {
-                    //Logout user and navigate back
-                }
+                onClick = { openBottomSheet() }
             ) {
                 Text(
-                    "Logout",
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(4.dp)
+                    "Contact Admin",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(8.dp)
                 )
             }
             Button(
                 modifier = Modifier
                     .width(200.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Primary
-                ),
                 shape = RoundedCornerShape(12.dp),
-                onClick = {
-                    //Pulls up a modal or something
-                    //Test
-                    submitAppeal()
-                }
+                onClick = { /* Logout */ }
             ) {
                 Text(
-                    "Contact Admin",
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(4.dp)
+                    "Logout",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(8.dp)
                 )
             }
         }
