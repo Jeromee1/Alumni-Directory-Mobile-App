@@ -27,6 +27,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.apa.alumnidirectory.data.model.request.AppealReq
 import com.apa.alumnidirectory.ui.components.cards.AdminAppealsUserCard
+import com.apa.alumnidirectory.ui.components.core.EmptyState
 import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.Primary
@@ -53,12 +55,16 @@ fun AdminAppealsScreen(
 ) {
     val appeals by viewModel.appeals.collectAsStateWithLifecycle()
     val unresolvedAppeals = appeals.filter { !it.resolved }
-    var showUnresolved by remember { mutableStateOf(false) }
+    var showUnresolved by remember { mutableStateOf(true) }
 
     val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val pullState = rememberPullToRefreshState()
 
-    if(appeals.isNotEmpty()) {
+    LaunchedEffect(Unit) {
+        viewModel.fetchAppeals()
+    }
+
+    if (appeals.isNotEmpty()) {
         AdminAppeals(
             if (showUnresolved) unresolvedAppeals else appeals,
             refreshing,
@@ -131,12 +137,15 @@ fun AdminAppeals(
                 onRefresh = { onRefresh() },
                 modifier = Modifier.fillMaxSize(),
             ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    items(appeals) { appeal ->
-                        AdminAppealsUserCard(appeal) { navToAppealDetails(appeal.uid) }
+                if (appeals.size < 1) EmptyState("There are no Pending Appeals")
+                else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+                        items(appeals) { appeal ->
+                            AdminAppealsUserCard(appeal) { navToAppealDetails(appeal.uid) }
+                        }
                     }
                 }
             }

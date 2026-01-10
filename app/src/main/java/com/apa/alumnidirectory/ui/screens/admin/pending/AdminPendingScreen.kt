@@ -34,6 +34,7 @@ import com.apa.alumnidirectory.ui.components.bottomsheet.CustomBottomSheet
 import com.apa.alumnidirectory.ui.components.bottomsheet.sheetcontent.PendingSheetContent
 import com.apa.alumnidirectory.ui.components.cards.AdminPendingUserCard
 import com.apa.alumnidirectory.ui.components.confirmation.CustomDialog
+import com.apa.alumnidirectory.ui.components.core.EmptyState
 import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 import kotlinx.coroutines.launch
@@ -49,17 +50,26 @@ fun AdminPendingScreen(
     val users by viewModel.pendingUsers.collectAsStateWithLifecycle()
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showDialog by remember { mutableStateOf(false) }
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    if(users.isNotEmpty()) {
+    if (!isLoading && users.isNotEmpty()) {
         AdminPending(
             users,
-            { showDialog = true }
-        ) { scope.launch { bottomSheetState.show() } }
+            {
+                viewModel.cacheUid(it)
+                showDialog = true
+            }
+        ) {
+            scope.launch {
+                viewModel.cacheUid(it)
+                bottomSheetState.show()
+            }
+        }
 
-        if(showDialog) {
+        if (showDialog) {
             CustomDialog(
                 { showDialog = false },
-                { /* Logic here */ },
+                { viewModel.approveUser(); showDialog = false },
                 "Approve user?",
                 "User would be allowed to gain access to the rest of the app.",
                 Icons.Filled.Warning
@@ -73,9 +83,12 @@ fun AdminPendingScreen(
             PendingSheetContent(
                 "Reason for rejection"
             ) {
-                /* Logic here */
+                viewModel.rejectUser(it)
+                scope.launch { bottomSheetState.hide() }
             }
         }
+    } else if (!isLoading) {
+        EmptyState("There are no pending users to review")
     } else {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -121,7 +134,6 @@ fun AdminPending(
                     user,
                     { onApproveClick(user.uid) },
                     {
-                        //Test function, I need your modal jeremy, here and in pending
                         onRejectClick(user.uid)
                     }
                 )

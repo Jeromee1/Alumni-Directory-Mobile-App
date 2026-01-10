@@ -52,12 +52,12 @@ class AdminAppealsDetailsViewModel @Inject constructor(
         }
     }
 
-    fun rejectUser() {
+    fun rejectUser(msg: String) {
         viewModelScope.launch {
             safeApiCall {
                 _appeal.value?.let {
                     repo.resolveAppeal(it.uid)
-                    repo.rejectUser(it.userUid, "").let {
+                    repo.rejectUser(it.userUid, msg).let {
                         _finish.emit(Unit)
                     }
                 }

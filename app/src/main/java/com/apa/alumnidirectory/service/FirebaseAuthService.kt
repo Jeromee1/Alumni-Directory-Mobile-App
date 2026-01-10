@@ -1,6 +1,5 @@
 package com.apa.alumnidirectory.service
 
-import android.util.Log
 import com.apa.alumnidirectory.data.model.user.FirebaseData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -16,6 +15,16 @@ class FirebaseAuthService @Inject constructor(
 ) {
     private val _user = MutableStateFlow<FirebaseData?>(null)
     val user = _user.asStateFlow()
+
+    init {
+        fetchLoggedInUser()
+    }
+
+    private fun fetchLoggedInUser() {
+        _user.value = firebaseAuth.currentUser?.let {
+            FirebaseData(it.uid)
+        }
+    }
 
     private fun updateUser(firebaseUser: FirebaseUser) {
         firebaseUser.let { user ->
@@ -51,5 +60,9 @@ class FirebaseAuthService @Inject constructor(
         result.user?.let { updateUser(it) }
 
         return result.user ?: throw java.lang.IllegalStateException("Login failed")
+    }
+
+    suspend fun logout() {
+        firebaseAuth.signOut()
     }
 }

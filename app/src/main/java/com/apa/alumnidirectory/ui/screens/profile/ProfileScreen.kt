@@ -65,9 +65,11 @@ import com.apa.alumnidirectory.ui.theme.LinkedIn
 import com.apa.alumnidirectory.ui.theme.Phone
 import com.apa.alumnidirectory.ui.theme.Primary
 import com.apa.alumnidirectory.ui.theme.Website
+import kotlinx.coroutines.flow.filterNotNull
 
 @Composable
 fun ProfileScreen(
+    isAdmin: Boolean,
     navController: NavController,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
@@ -75,6 +77,7 @@ fun ProfileScreen(
         viewModel.fetchUser()
     }
     val context = LocalContext.current
+
     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     var showDialog by remember { mutableStateOf(false) }
     var dialogText by remember { mutableStateOf("") }
@@ -83,10 +86,30 @@ fun ProfileScreen(
 
     val perms = viewModel.permissionCheck()
 
+    var isLoading by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        viewModel.firebaseUser.filterNotNull().collect {
+            isLoading = false
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.firebaseUser.collect {
+            if (it == null && !isLoading) {
+                navController.navigate(Screen.Login) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+        }
+    }
+
     val _user by viewModel.user.collectAsStateWithLifecycle()
     val user = _user
     if (user != null) {
         Profile(
+            isAdmin,
             user,
             perms,
             { dialogTitle = it },
@@ -97,7 +120,7 @@ fun ProfileScreen(
                 Toast.makeText(context, "Copied to Clipboard", Toast.LENGTH_SHORT)
                     .show()
             },
-            { /* Logout Logic */ },
+            viewModel::signOut,
             { showDialog = true }) {
             navController.navigate(Screen.EditProfile(user.uid))
         }
@@ -124,6 +147,7 @@ fun ProfileScreen(
 
 @Composable
 fun Profile(
+    isAdmin: Boolean,
     user: UserData,
     perms: Boolean,
     dialogTitleChange: (String) -> Unit,
@@ -421,24 +445,26 @@ fun Profile(
             }
             Spacer(Modifier.height(40.dp))
         }
-        FloatingActionButton(
-            onClick = { logout() },
-            containerColor = Primary,
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(20.dp)
-                .size(80.dp)
-                .padding(8.dp),
-            shape = RoundedCornerShape(100)
-        ) {
-            Icon(
-                Icons.AutoMirrored.Filled.Logout,
-                "",
-                tint = Danger,
-                modifier = Modifier.size(44.dp)
-            )
+        if (perms) {
+            FloatingActionButton(
+                onClick = { logout() },
+                containerColor = Primary,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(20.dp)
+                    .size(80.dp)
+                    .padding(8.dp),
+                shape = RoundedCornerShape(100)
+            ) {
+                Icon(
+                    Icons.AutoMirrored.Filled.Logout,
+                    "",
+                    tint = Danger,
+                    modifier = Modifier.size(44.dp)
+                )
+            }
         }
-        if (perms)
+        if (perms || isAdmin)
             FloatingActionButton(
                 onClick = { navToEdit() },
                 containerColor = Primary,

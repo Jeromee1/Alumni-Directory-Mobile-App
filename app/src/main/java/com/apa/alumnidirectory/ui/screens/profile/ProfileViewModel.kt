@@ -1,9 +1,10 @@
 package com.apa.alumnidirectory.ui.screens.profile
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.apa.alumnidirectory.data.enums.Roles
 import com.apa.alumnidirectory.data.model.user.CurrentUser
+import com.apa.alumnidirectory.data.model.user.FirebaseData
 import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.data.repo.AuthRepo
 import com.apa.alumnidirectory.service.FirebaseAuthService
@@ -23,9 +24,16 @@ class ProfileViewModel @Inject constructor(
 ) : BaseViewModel() {
     private var _currentUser = MutableStateFlow<CurrentUser?>(null)
     val currentUser = _currentUser.asStateFlow()
+
+    private var _firebaseUser = MutableStateFlow<FirebaseData?>(null)
+    val firebaseUser = _currentUser.asStateFlow()
+
+
     private val userUid = savedStateHandle.get<String>("userUid")!!
     private var _user = MutableStateFlow<UserData?>(null)
     val user = _user.asStateFlow()
+
+
 
     init {
         fetchLoggedInUser()
@@ -36,6 +44,7 @@ class ProfileViewModel @Inject constructor(
             safeApiCall {
                 firebaseAuth.getCurrentUser()?.let { user ->
                     val userData = repo.fetchProfile(user.uid)
+                    _firebaseUser.update { user }
                     _currentUser.update {
                         CurrentUser(
                             firebaseData = user,
@@ -43,6 +52,17 @@ class ProfileViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+        }
+    }
+
+    fun signOut() {
+        viewModelScope.launch {
+            safeApiCall {
+                firebaseAuth.logout().let {
+                    _currentUser.value = null
+                }
+                Log.d("debug", _currentUser.value.toString())
             }
         }
     }
@@ -61,7 +81,6 @@ class ProfileViewModel @Inject constructor(
     fun permissionCheck(): Boolean {
         val user = _user.value
         val currentUser = currentUser.value
-        return (user?.uid == currentUser?.firebaseData?.uid
-                || currentUser?.userData?.role == Roles.ADMIN.value)
+        return (user?.uid == currentUser?.firebaseData?.uid)
     }
 }

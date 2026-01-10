@@ -108,7 +108,6 @@ fun LoginScreen(
                 .padding(60.dp),
             shape = RoundedCornerShape(12.dp),
             onClick = {
-                //Login function stuff
                 viewModel.login(form)
             }
         ) {

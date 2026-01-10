@@ -66,18 +66,18 @@ fun AdminAppealsDetailsScreen(
             navController.popBackStack()
         }
     }
-    if(appeal != null) {
+    if (appeal != null) {
         AdminAppealsDetails(
             appeal,
-            { navController.navigate(Screen.Profile(it)) },
+            { navController.navigate(Screen.Profile(it, isAdmin = false)) },
             { showDialog = true },
             { scope.launch { bottomSheetState.show() } }
         )
 
-        if(showDialog) {
+        if (showDialog) {
             CustomDialog(
                 { showDialog = false },
-                { /* Logic here */ },
+                viewModel::approveUser,
                 "Approve user's appeal?",
                 "User would be allowed to gain access to the rest of the app.",
                 Icons.Filled.Warning
@@ -89,10 +89,9 @@ fun AdminAppealsDetailsScreen(
             { scope.launch { bottomSheetState.hide() } }
         ) {
             PendingSheetContent(
-                "Reason for rejection. Again."
-            ) {
-                /* Logic here */
-            }
+                "Reason for rejection. Again.",
+                viewModel::rejectUser
+            )
         }
     } else {
         Box(
