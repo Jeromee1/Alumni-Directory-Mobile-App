@@ -138,7 +138,7 @@ fun AdminAppeals(
                 onRefresh = { onRefresh() },
                 modifier = Modifier.fillMaxSize(),
             ) {
-                if (appeals.size < 1) EmptyState("There are no Pending Appeals")
+                if (appeals.isEmpty()) EmptyState("There are no Pending Appeals")
                 else {
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth(),
