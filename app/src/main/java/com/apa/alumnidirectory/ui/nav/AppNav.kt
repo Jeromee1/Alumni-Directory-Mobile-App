@@ -1,5 +1,7 @@
 package com.apa.alumnidirectory.ui.nav
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,6 +29,7 @@ import com.apa.alumnidirectory.ui.screens.pending.PendingScreen
 import com.apa.alumnidirectory.ui.screens.profile.ProfileScreen
 import com.apa.alumnidirectory.ui.screens.profile.edit.EditProfileScreen
 import com.apa.alumnidirectory.ui.screens.register.RegisterScreen
+import com.apa.alumnidirectory.ui.screens.splash.SplashScreen
 import com.apa.alumnidirectory.ui.theme.Background
 import com.apa.alumnidirectory.ui.theme.Text1
 
@@ -38,6 +41,7 @@ fun AppNav() {
 
     val showTopBar = when {
         dest == null -> false
+        dest.hasRoute<Screen.Splash>() ||
         dest.hasRoute<Screen.Login>() ||
         dest.hasRoute<Screen.Register>() ||
         dest.hasRoute<Screen.Pending>() -> false
@@ -68,7 +72,15 @@ fun AppNav() {
 
 @Composable
 fun Nav(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.Login) {
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Splash,
+        enterTransition = { slideInHorizontally { it } },
+        exitTransition = { slideOutHorizontally { -it } },
+        popEnterTransition = { slideInHorizontally { -it } },
+        popExitTransition = { slideOutHorizontally { it } }
+    ) {
+        composable<Screen.Splash> { SplashScreen(navController) }
         composable<Screen.Home> { HomeScreen(navController) }
         composable<Screen.Login> { LoginScreen(navController) }
         composable<Screen.Register> { RegisterScreen(navController) }
