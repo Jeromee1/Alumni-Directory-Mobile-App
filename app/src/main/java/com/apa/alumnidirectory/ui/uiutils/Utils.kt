@@ -17,6 +17,7 @@ object UserFilter {
             .filter { filter.state == null || it.location.state == filter.state }
             .filter { filter.year == null || it.graduationYear == filter.year }
             .filter { filter.techStack == null || it.primaryStack == filter.techStack }
+            .filter { filter.status == null || it.status == filter.status }
             .let { list ->
                 when (filter.sort) {
                     Sort.NAME_ASC.value -> list.sortedBy { it.fullName }
@@ -30,16 +31,17 @@ object UserFilter {
     }
 }
 
-object FilterPlaceholders {
-    const val COUNTRY = "Country"
-    const val STATE = "State"
-    const val YEAR = "Graduation Year"
-    const val STACK = "Tech Stack"
-}
+    object FilterPlaceholders {
+        const val COUNTRY = "Country"
+        const val STATE = "State"
+        const val YEAR = "Graduation Year"
+        const val STACK = "Tech Stack"
+        const val STATUS = "Status"
+    }
 
-fun timeCheckForAppeal(time: Long): Boolean {
-    val hours24 = 24 * 60 * 60 * 1000L
-    val now = System.currentTimeMillis()
-    return now - time >= hours24
-}
+    fun timeCheckForAppeal(time: Long): Boolean {
+        val hours24 = 24 * 60 * 60 * 1000L
+        val now = System.currentTimeMillis()
+        return now - time >= hours24
+    }
 
