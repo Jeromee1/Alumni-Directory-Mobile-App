@@ -140,12 +140,6 @@ fun RegisterScreen(
                             graduationYear,
                             generateGradYears().map { it.toString() })
                         { form = copy(graduationYear = it) },
-                        FieldData(
-                            "Department",
-                            department,
-                            departments.sortWithOtherLast()
-                        )
-                        { form = copy(department = it) }
                     )
                 )
 
@@ -161,7 +155,13 @@ fun RegisterScreen(
                             techStack,
                             stacks.sortWithOtherLast()
                         )
-                        { form = copy(techStack = it) }
+                        { form = copy(techStack = it) },
+                        FieldData(
+                            "Department",
+                            department,
+                            departments.sortWithOtherLast()
+                        )
+                        { form = copy(department = it) }
                     )
                 )
 

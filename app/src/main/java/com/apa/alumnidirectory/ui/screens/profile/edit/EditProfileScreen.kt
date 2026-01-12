@@ -62,6 +62,7 @@ import com.apa.alumnidirectory.ui.components.pfp.Pfp1
 import com.apa.alumnidirectory.ui.components.pfp.Pfp2
 import com.apa.alumnidirectory.ui.theme.Primary
 import com.apa.alumnidirectory.ui.theme.Text1
+import com.apa.alumnidirectory.ui.uiutils.sortWithOtherLast
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,6 +82,8 @@ fun EditProfileScreen(
     val selectedCountry by viewModel.selectedCountry.collectAsStateWithLifecycle()
     val states by viewModel.availableStates.collectAsStateWithLifecycle()
     val selectedState by viewModel.selectedState.collectAsStateWithLifecycle()
+    val stacks by viewModel.techStacks.collectAsStateWithLifecycle()
+    val departments by viewModel.departments.collectAsStateWithLifecycle()
 
     val perms = viewModel.permissionCheck()
     val user = viewModel.user.collectAsStateWithLifecycle().value
@@ -136,6 +139,8 @@ fun EditProfileScreen(
             states,
             selectedState,
             viewModel::onStateSelected,
+            stacks,
+            departments,
             { showDialog = true }
         ) { scope.launch { bottomSheetState.show() } }
 
@@ -184,6 +189,8 @@ fun EditProfile(
     states: List<State>,
     selectedState: State?,
     onSelectedState: (State) -> Unit,
+    stack: List<String>,
+    department: List<String>,
     openDialog: () -> Unit,
     openBottomSheet: () -> Unit
 ) {
@@ -229,13 +236,21 @@ fun EditProfile(
                 CustomTextFieldBox(
                     categoryName = "Job Information",
                     fields = listOf(
-                        FieldData("Depart", department)
-                        { formOnChange(copy(department = it)) },
-                        FieldData("Position", position)
-                        { formOnChange(copy(position = it)) },
                         FieldData("Company", company)
                         { formOnChange(copy(company = it)) },
-                        FieldData("Stack", primaryStack)
+                        FieldData("Position", position)
+                        { formOnChange(copy(position = it)) },
+                        FieldData(
+                            "Department",
+                            form.department,
+                            list = department.sortWithOtherLast()
+                        )
+                        { formOnChange(copy(department = it)) },
+                        FieldData(
+                            "Tech Stack",
+                            form.primaryStack,
+                            list = stack.sortWithOtherLast()
+                        )
                         { formOnChange(copy(primaryStack = it)) },
                     )
                 )

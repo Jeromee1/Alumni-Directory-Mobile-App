@@ -3,7 +3,8 @@ package com.apa.alumnidirectory.ui.screens.admin.dashboard
 import androidx.lifecycle.viewModelScope
 import com.apa.alumnidirectory.data.enums.Status
 import com.apa.alumnidirectory.data.model.ui.DashboardUiState
-import com.apa.alumnidirectory.data.repo.AuthRepo
+import com.apa.alumnidirectory.data.repo.AppealRepo
+import com.apa.alumnidirectory.data.repo.UserRepo
 import com.apa.alumnidirectory.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    val repo: AuthRepo
+    val userRepo: UserRepo,
+    val appealRepo: AppealRepo
 ) : BaseViewModel() {
     private var _uiState = MutableStateFlow(DashboardUiState())
     val uiState = _uiState.asStateFlow()
@@ -22,9 +24,9 @@ class DashboardViewModel @Inject constructor(
     fun loadDashboard() {
         viewModelScope.launch {
             safeApiCall {
-                val appeals = repo.fetchUnresolvedAppeal()
-                val pendingUsers = repo.fetchPendingUsers()
-                val approvedUsers = repo.fetchApprovedUsers()
+                val appeals = appealRepo.fetchUnresolvedAppeal()
+                val pendingUsers = userRepo.fetchPendingUsers()
+                val approvedUsers = userRepo.fetchApprovedUsers()
 
                 val oneWeekAgo = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)
 

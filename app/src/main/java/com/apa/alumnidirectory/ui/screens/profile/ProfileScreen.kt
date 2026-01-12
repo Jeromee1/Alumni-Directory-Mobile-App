@@ -233,6 +233,10 @@ fun Profile(
                     fontSize = 18.sp
                 )
                 Text(
+                    "Department: ${user.department}",
+                    fontSize = 18.sp
+                )
+                Text(
                     "Stack: ${user.primaryStack}",
                     fontSize = 18.sp
                 )
@@ -345,7 +349,7 @@ fun Profile(
                                 )
                                 .clickable {
                                     dialogTrigger(
-                                        "Phone",
+                                        "GitHub",
                                         user.contact.github,
                                         Icons.Filled.Gite
                                     )
@@ -374,7 +378,7 @@ fun Profile(
                                 )
                                 .clickable {
                                     dialogTrigger(
-                                        "Phone",
+                                        "LinkedIn",
                                         user.contact.linkedIn,
                                         Icons.Filled.Link
                                     )
@@ -403,7 +407,7 @@ fun Profile(
                                 )
                                 .clickable {
                                     dialogTrigger(
-                                        "Phone",
+                                        "Personal Website",
                                         user.contact.website,
                                         Icons.Default.Language
                                     )

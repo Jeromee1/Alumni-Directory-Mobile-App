@@ -7,7 +7,10 @@ import com.apa.alumnidirectory.data.model.forms.RegisterForm
 import com.apa.alumnidirectory.data.model.request.AppealReq
 import com.apa.alumnidirectory.data.model.request.LoginReq
 import com.apa.alumnidirectory.data.model.user.UserData
+import com.apa.alumnidirectory.data.repo.AppealRepo
 import com.apa.alumnidirectory.data.repo.AuthRepo
+import com.apa.alumnidirectory.data.repo.MetadataRepo
+import com.apa.alumnidirectory.data.repo.UserRepo
 import com.apa.alumnidirectory.data.utils.buildAdminEditReq
 import com.apa.alumnidirectory.data.utils.buildEditReq
 import com.apa.alumnidirectory.data.utils.buildUserData
@@ -26,15 +29,6 @@ class AuthRepoImpl @Inject constructor(
         .document("directory")
         .collection("users")
 
-    private val dbAppealRef = firestore
-        .collection("alumni_directory_db")
-        .document("directory")
-        .collection("appeals")
-
-    private val dbMetadataRef = firestore
-        .collection("alumni_directory_db")
-        .document("metadata")
-
     override suspend fun register(user: RegisterForm) {
         val userUid = authService.register(user.email, user.password)
         val userData = buildUserData(user, userUid)
@@ -52,6 +46,15 @@ class AuthRepoImpl @Inject constructor(
         }
     }
 
+}
+
+class UserRepoImpl @Inject constructor(
+    firestore: FirebaseFirestore
+) : UserRepo {
+    private val dbRef = firestore
+        .collection("alumni_directory_db")
+        .document("directory")
+        .collection("users")
     override suspend fun fetchProfile(uid: String): UserData {
         return dbRef.document(uid)
             .get()
@@ -68,6 +71,38 @@ class AuthRepoImpl @Inject constructor(
     override suspend fun adminUpdateProfile(uid: String, form: AdminEditProfileForm) {
         val updates = buildAdminEditReq(form).toMap()
         dbRef.document(uid).update(updates).await()
+    }
+
+    override suspend fun approveUser(uid: String) {
+        dbRef.document(uid)
+            .update(
+                mapOf<String, Any>(
+                    "status" to Status.APPROVED.value,
+                    "approvedAt" to System.currentTimeMillis()
+                )
+            )
+            .await()
+    }
+
+    override suspend fun rejectUser(uid: String, msg: String) {
+        if (msg.isBlank()) {
+            dbRef.document(uid)
+                .update(
+                    mapOf<String, Any>(
+                        "status" to Status.REJECTED.value,
+                    )
+                )
+                .await()
+        } else {
+            dbRef.document(uid)
+                .update(
+                    mapOf<String, Any>(
+                        "status" to Status.REJECTED.value,
+                        "rejectionMsg" to msg
+                    )
+                )
+                .await()
+        }
     }
 
     override suspend fun fetchAllUsers(): List<UserData> {
@@ -98,7 +133,15 @@ class AuthRepoImpl @Inject constructor(
             it.toObject(UserData::class.java)
         }
     }
+}
 
+class AppealRepoImpl @Inject constructor(
+    firestore: FirebaseFirestore
+) : AppealRepo {
+    private val dbAppealRef = firestore
+        .collection("alumni_directory_db")
+        .document("directory")
+        .collection("appeals")
     override suspend fun submitAppeal(appeal: AppealReq) {
         val ref = dbAppealRef.document()
         val newAppeal = appeal.copy(uid = ref.id)
@@ -142,50 +185,25 @@ class AuthRepoImpl @Inject constructor(
                 )
             )
     }
+}
 
-    override suspend fun approveUser(uid: String) {
-        dbRef.document(uid)
-            .update(
-                mapOf<String, Any>(
-                    "status" to Status.APPROVED.value,
-                    "approvedAt" to System.currentTimeMillis()
-                )
-            )
-            .await()
-    }
-
-    override suspend fun rejectUser(uid: String, msg: String) {
-        if (msg.isBlank()) {
-            dbRef.document(uid)
-                .update(
-                    mapOf<String, Any>(
-                        "status" to Status.REJECTED.value,
-                    )
-                )
-                .await()
-        } else {
-            dbRef.document(uid)
-                .update(
-                    mapOf<String, Any>(
-                        "status" to Status.REJECTED.value,
-                        "rejectionMsg" to msg
-                    )
-                )
-                .await()
-        }
-    }
-
+class MetadataRepoImpl @Inject constructor(
+    firestore: FirebaseFirestore
+) : MetadataRepo {
+    private val dbMetadataRef = firestore
+        .collection("alumni_directory_db")
+        .document("metadata")
     override suspend fun fetchMetadata(): DocumentSnapshot {
         return dbMetadataRef.get().await()
     }
 
     override suspend fun readMetadataDept(): List<String> {
         val snapshot = fetchMetadata()
-        return snapshot.get("techStacks") as? List<String> ?: emptyList()
+        return snapshot.get("departments") as? List<String> ?: emptyList()
     }
 
     override suspend fun readMetadataStacks(): List<String> {
         val snapshot = fetchMetadata()
-        return snapshot.get("departments") as? List<String> ?: emptyList()
+        return snapshot.get("techStacks") as? List<String> ?: emptyList()
     }
 }

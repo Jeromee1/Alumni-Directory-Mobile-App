@@ -10,7 +10,8 @@ import com.apa.alumnidirectory.data.model.ui.Country
 import com.apa.alumnidirectory.data.model.ui.State
 import com.apa.alumnidirectory.data.model.user.CurrentUser
 import com.apa.alumnidirectory.data.model.user.UserData
-import com.apa.alumnidirectory.data.repo.AuthRepo
+import com.apa.alumnidirectory.data.repo.MetadataRepo
+import com.apa.alumnidirectory.data.repo.UserRepo
 import com.apa.alumnidirectory.data.utils.loadCountries
 import com.apa.alumnidirectory.service.FirebaseAuthService
 import com.apa.alumnidirectory.ui.base.BaseViewModel
@@ -30,7 +31,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    val repo: AuthRepo,
+    val userRepo: UserRepo,
+    val metadataRepo: MetadataRepo,
     val firebaseAuth: FirebaseAuthService,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
@@ -49,6 +51,11 @@ class EditProfileViewModel @Inject constructor(
     private val _selectedState = MutableStateFlow<State?>(null)
     val selectedState = _selectedState.asStateFlow()
 
+    private val _techStacks = MutableStateFlow<List<String>>(emptyList())
+    val techStacks = _techStacks.asStateFlow()
+    private val _departments = MutableStateFlow<List<String>>(emptyList())
+    val departments = _departments.asStateFlow()
+
     val availableStates = _selectedCountry
         .map { it?.states ?: emptyList() }
         .stateIn(
@@ -61,13 +68,27 @@ class EditProfileViewModel @Inject constructor(
     init {
         fetchUser()
         fetchLoggedInUser()
+        fetchMetadata()
+    }
+
+    fun fetchMetadata() {
+        viewModelScope.launch {
+            safeApiCall {
+                metadataRepo.readMetadataDept().let { departments ->
+                    _departments.update { departments }
+                }
+                metadataRepo.readMetadataStacks().let { stacks ->
+                    _techStacks.update { stacks }
+                }
+            }
+        }
     }
 
     fun fetchLoggedInUser() {
         viewModelScope.launch {
             safeApiCall {
                 firebaseAuth.getCurrentUser()?.let { user ->
-                    val userData = repo.fetchProfile(user.uid)
+                    val userData = userRepo.fetchProfile(user.uid)
                     _currentUser.update {
                         CurrentUser(
                             firebaseData = user,
@@ -91,7 +112,7 @@ class EditProfileViewModel @Inject constructor(
     fun fetchUser() {
         viewModelScope.launch {
             safeApiCall {
-                setUser(repo.fetchProfile(uid))
+                setUser(userRepo.fetchProfile(uid))
             }
         }
     }
@@ -112,7 +133,7 @@ class EditProfileViewModel @Inject constructor(
         if(!validateEditProfileForm(form)) return
         viewModelScope.launch {
             safeApiCall {
-                repo.updateProfile(uid, form).let {
+                userRepo.updateProfile(uid, form).let {
                     _finish.emit(Unit)
                 }
             }
@@ -123,8 +144,8 @@ class EditProfileViewModel @Inject constructor(
         if (!validateEditProfileForm(form) || !validateAdminEditProfileForm(adminForm)) return
         viewModelScope.launch {
             safeApiCall {
-                repo.updateProfile(uid, form)
-                repo.adminUpdateProfile(uid, adminForm).let {
+                userRepo.updateProfile(uid, form)
+                userRepo.adminUpdateProfile(uid, adminForm).let {
                     _finish.emit(Unit)
                 }
             }

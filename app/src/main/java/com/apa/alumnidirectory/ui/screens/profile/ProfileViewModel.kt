@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.apa.alumnidirectory.data.model.user.CurrentUser
 import com.apa.alumnidirectory.data.model.user.FirebaseData
 import com.apa.alumnidirectory.data.model.user.UserData
-import com.apa.alumnidirectory.data.repo.AuthRepo
+import com.apa.alumnidirectory.data.repo.UserRepo
 import com.apa.alumnidirectory.service.FirebaseAuthService
 import com.apa.alumnidirectory.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    val repo: AuthRepo,
+    val repo: UserRepo,
     val firebaseAuth: FirebaseAuthService,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
@@ -27,12 +27,9 @@ class ProfileViewModel @Inject constructor(
     private var _firebaseUser = MutableStateFlow<FirebaseData?>(null)
     val firebaseUser = _currentUser.asStateFlow()
 
-
     private val userUid = savedStateHandle.get<String>("userUid")!!
     private var _user = MutableStateFlow<UserData?>(null)
     val user = _user.asStateFlow()
-
-
 
     init {
         fetchLoggedInUser()
@@ -68,7 +65,6 @@ class ProfileViewModel @Inject constructor(
     fun fetchUser() {
         viewModelScope.launch {
             safeApiCall {
-
                 repo.fetchProfile(userUid).let { userData ->
                     _user.update { userData }
                 }

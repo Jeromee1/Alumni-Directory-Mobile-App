@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.apa.alumnidirectory.data.model.ui.FilterOptions
 import com.apa.alumnidirectory.data.model.ui.FilterState
 import com.apa.alumnidirectory.data.model.user.UserData
-import com.apa.alumnidirectory.data.repo.AuthRepo
+import com.apa.alumnidirectory.data.repo.UserRepo
 import com.apa.alumnidirectory.service.FirebaseAuthService
 import com.apa.alumnidirectory.ui.base.BaseViewModel
 import com.apa.alumnidirectory.ui.uiutils.UserFilter
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    val repo: AuthRepo,
+    val repo: UserRepo,
     val firebaseAuth: FirebaseAuthService,
 ) : BaseViewModel() {
     private var approvedUsers = MutableStateFlow<List<UserData>>(emptyList())
