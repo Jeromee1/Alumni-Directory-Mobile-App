@@ -80,9 +80,9 @@ fun SplashScreen(
 
     LaunchedEffect(Unit) {
         state = 0
-        delay(1000)
+        delay(800)
         state = 1
-        delay(2000)
+        delay(1500)
         state = 2
         delay(2000)
         bg = false

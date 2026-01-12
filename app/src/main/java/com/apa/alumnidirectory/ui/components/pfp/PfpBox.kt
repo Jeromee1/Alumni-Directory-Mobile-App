@@ -32,9 +32,12 @@ fun PfpBox(
         contentAlignment = Alignment.Center
     ) {
         when (id) {
-            0 -> DefaultPfp()
             1 -> Pfp1()
             2 -> Pfp2()
+            3 -> Pfp3()
+            4 -> Pfp4()
+            5 -> Pfp5()
+            else -> DefaultPfp()
         }
     }
 }

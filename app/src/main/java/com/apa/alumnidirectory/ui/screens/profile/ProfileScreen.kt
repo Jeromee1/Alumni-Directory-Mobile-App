@@ -57,6 +57,9 @@ import com.apa.alumnidirectory.ui.components.core.LoadingIcon
 import com.apa.alumnidirectory.ui.components.pfp.DefaultPfp
 import com.apa.alumnidirectory.ui.components.pfp.Pfp1
 import com.apa.alumnidirectory.ui.components.pfp.Pfp2
+import com.apa.alumnidirectory.ui.components.pfp.Pfp3
+import com.apa.alumnidirectory.ui.components.pfp.Pfp4
+import com.apa.alumnidirectory.ui.components.pfp.Pfp5
 import com.apa.alumnidirectory.ui.nav.Screen
 import com.apa.alumnidirectory.ui.theme.Danger
 import com.apa.alumnidirectory.ui.theme.Email
@@ -191,9 +194,12 @@ fun Profile(
                         .border(2.dp, Color.LightGray, RoundedCornerShape(12.dp))
                 ) {
                     when (user.photoUrl) {
-                        0 -> DefaultPfp()
                         1 -> Pfp1()
                         2 -> Pfp2()
+                        3 -> Pfp3()
+                        4 -> Pfp4()
+                        5 -> Pfp5()
+                        else -> DefaultPfp()
                     }
                 }
                 Column(
@@ -448,7 +454,7 @@ fun Profile(
         if (perms) {
             FloatingActionButton(
                 onClick = { logout() },
-                containerColor = Primary,
+                containerColor = Danger,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(20.dp)
@@ -459,7 +465,6 @@ fun Profile(
                 Icon(
                     Icons.AutoMirrored.Filled.Logout,
                     "",
-                    tint = Danger,
                     modifier = Modifier.size(44.dp)
                 )
             }

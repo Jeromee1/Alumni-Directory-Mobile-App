@@ -125,9 +125,9 @@ fun RegisterScreen(
                         { form = copy(fullName = it) },
                         FieldData("Email", email)
                         { form = copy(email = it) },
-                        FieldData("Password", password)
+                        FieldData("Password", password, isPassword = true)
                         { form = copy(password = it) },
-                        FieldData("Confirm Password", password2)
+                        FieldData("Confirm Password", password2, isPassword = true)
                         { form = copy(password2 = it) }
                     )
                 )

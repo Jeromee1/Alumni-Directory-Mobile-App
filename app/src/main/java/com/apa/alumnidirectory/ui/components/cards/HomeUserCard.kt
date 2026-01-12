@@ -30,6 +30,9 @@ import com.apa.alumnidirectory.data.model.user.UserData
 import com.apa.alumnidirectory.ui.components.pfp.DefaultPfp
 import com.apa.alumnidirectory.ui.components.pfp.Pfp1
 import com.apa.alumnidirectory.ui.components.pfp.Pfp2
+import com.apa.alumnidirectory.ui.components.pfp.Pfp3
+import com.apa.alumnidirectory.ui.components.pfp.Pfp4
+import com.apa.alumnidirectory.ui.components.pfp.Pfp5
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 import com.apa.alumnidirectory.ui.theme.Text1
 
@@ -85,6 +88,9 @@ fun HomeUserCard(
                         when (user.photoUrl) {
                             1 -> Pfp1()
                             2 -> Pfp2()
+                            3 -> Pfp3()
+                            4 -> Pfp4()
+                            5 -> Pfp5()
                             else -> DefaultPfp()
                         }
                     }

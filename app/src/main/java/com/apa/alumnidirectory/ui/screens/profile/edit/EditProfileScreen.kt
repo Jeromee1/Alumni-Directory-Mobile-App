@@ -60,6 +60,9 @@ import com.apa.alumnidirectory.ui.components.inputs.CustomTextFieldBox
 import com.apa.alumnidirectory.ui.components.pfp.DefaultPfp
 import com.apa.alumnidirectory.ui.components.pfp.Pfp1
 import com.apa.alumnidirectory.ui.components.pfp.Pfp2
+import com.apa.alumnidirectory.ui.components.pfp.Pfp3
+import com.apa.alumnidirectory.ui.components.pfp.Pfp4
+import com.apa.alumnidirectory.ui.components.pfp.Pfp5
 import com.apa.alumnidirectory.ui.theme.Primary
 import com.apa.alumnidirectory.ui.theme.Text1
 import kotlinx.coroutines.launch
@@ -211,9 +214,12 @@ fun EditProfile(
                             .clickable { openBottomSheet() }
                     ) {
                         when (photoUrl) {
-                            0 -> DefaultPfp()
                             1 -> Pfp1()
                             2 -> Pfp2()
+                            3 -> Pfp3()
+                            4 -> Pfp4()
+                            5 -> Pfp5()
+                            else -> DefaultPfp()
                         }
                     }
                     Icon(
