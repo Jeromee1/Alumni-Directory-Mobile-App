@@ -33,6 +33,7 @@ import com.apa.alumnidirectory.ui.components.pfp.Pfp2
 import com.apa.alumnidirectory.ui.components.pfp.Pfp3
 import com.apa.alumnidirectory.ui.components.pfp.Pfp4
 import com.apa.alumnidirectory.ui.components.pfp.Pfp5
+import com.apa.alumnidirectory.ui.theme.Primary
 import com.apa.alumnidirectory.ui.theme.SecondaryG
 import com.apa.alumnidirectory.ui.theme.Text1
 
@@ -45,7 +46,7 @@ fun HomeUserCard(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                if (user.role == "Admin") Color.Red
+                if (user.role == "Admin") Primary
                 else Color.Transparent,
                 RoundedCornerShape(12.dp)
             )
