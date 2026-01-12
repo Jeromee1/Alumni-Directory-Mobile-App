@@ -31,17 +31,24 @@ object UserFilter {
     }
 }
 
-    object FilterPlaceholders {
-        const val COUNTRY = "Country"
-        const val STATE = "State"
-        const val YEAR = "Graduation Year"
-        const val STACK = "Tech Stack"
-        const val STATUS = "Status"
-    }
+object FilterPlaceholders {
+    const val COUNTRY = "Country"
+    const val STATE = "State"
+    const val YEAR = "Graduation Year"
+    const val STACK = "Tech Stack"
+    const val STATUS = "Status"
+}
 
-    fun timeCheckForAppeal(time: Long): Boolean {
-        val hours24 = 24 * 60 * 60 * 1000L
-        val now = System.currentTimeMillis()
-        return now - time >= hours24
-    }
+fun timeCheckForAppeal(time: Long): Boolean {
+    val hours24 = 24 * 60 * 60 * 1000L
+    val now = System.currentTimeMillis()
+    return now - time >= hours24
+}
+
+fun List<String>.sortWithOtherLast(): List<String> {
+    return this.sortedWith(
+        compareBy<String> { it.contains("Other", ignoreCase = true) }
+            .thenBy { it.lowercase() }
+    )
+}
 
