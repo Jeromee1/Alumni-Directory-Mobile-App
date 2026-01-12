@@ -5,7 +5,7 @@ import com.apa.alumnidirectory.data.enums.Status
 import com.apa.alumnidirectory.data.model.ui.FilterOptions
 import com.apa.alumnidirectory.data.model.ui.FilterState
 import com.apa.alumnidirectory.data.model.user.UserData
-import com.apa.alumnidirectory.data.repo.AuthRepo
+import com.apa.alumnidirectory.data.repo.UserRepo
 import com.apa.alumnidirectory.ui.base.BaseViewModel
 import com.apa.alumnidirectory.ui.uiutils.UserFilter
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class AdminManageViewModel @Inject constructor(
-    val repo: AuthRepo
+    val repo: UserRepo
 ) : BaseViewModel() {
     private var allUsers = MutableStateFlow<List<UserData>>(emptyList())
     private var _isLoading = MutableStateFlow(true)

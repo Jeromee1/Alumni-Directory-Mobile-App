@@ -2,7 +2,7 @@ package com.apa.alumnidirectory.ui.screens.admin.pending
 
 import androidx.lifecycle.viewModelScope
 import com.apa.alumnidirectory.data.model.user.UserData
-import com.apa.alumnidirectory.data.repo.AuthRepo
+import com.apa.alumnidirectory.data.repo.UserRepo
 import com.apa.alumnidirectory.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class AdminPendingViewModel @Inject constructor(
-    val repo: AuthRepo
+    val repo: UserRepo
 ) : BaseViewModel() {
     private var _pendingUsers = MutableStateFlow<List<UserData>>(emptyList())
     val pendingUsers = _pendingUsers.asStateFlow()

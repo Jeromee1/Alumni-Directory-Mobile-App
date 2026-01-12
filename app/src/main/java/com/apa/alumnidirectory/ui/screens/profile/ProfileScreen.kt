@@ -349,7 +349,7 @@ fun Profile(
                                 )
                                 .clickable {
                                     dialogTrigger(
-                                        "Phone",
+                                        "GitHub",
                                         user.contact.github,
                                         Icons.Filled.Gite
                                     )
@@ -378,7 +378,7 @@ fun Profile(
                                 )
                                 .clickable {
                                     dialogTrigger(
-                                        "Phone",
+                                        "LinkedIn",
                                         user.contact.linkedIn,
                                         Icons.Filled.Link
                                     )
@@ -407,7 +407,7 @@ fun Profile(
                                 )
                                 .clickable {
                                     dialogTrigger(
-                                        "Phone",
+                                        "Personal Website",
                                         user.contact.website,
                                         Icons.Default.Language
                                     )

@@ -1,7 +1,13 @@
 package com.apa.alumnidirectory.core.di
 
+import com.apa.alumnidirectory.data.repo.AppealRepo
 import com.apa.alumnidirectory.data.repo.AuthRepo
+import com.apa.alumnidirectory.data.repo.MetadataRepo
+import com.apa.alumnidirectory.data.repo.UserRepo
+import com.apa.alumnidirectory.data.repo.impls.AppealRepoImpl
 import com.apa.alumnidirectory.data.repo.impls.AuthRepoImpl
+import com.apa.alumnidirectory.data.repo.impls.MetadataRepoImpl
+import com.apa.alumnidirectory.data.repo.impls.UserRepoImpl
 import com.apa.alumnidirectory.service.FirebaseAuthService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -33,4 +39,20 @@ class AppModule {
     fun providesAuthRepo(authService: FirebaseAuthService, firestore: FirebaseFirestore): AuthRepo {
         return AuthRepoImpl(authService, firestore)
     }
+    @Provides
+    @Singleton
+    fun providesUserRepo(firestore: FirebaseFirestore): UserRepo {
+        return UserRepoImpl(firestore)
+    }
+    @Provides
+    @Singleton
+    fun providesAppealRepo(firestore: FirebaseFirestore): AppealRepo {
+        return AppealRepoImpl(firestore)
+    }
+    @Provides
+    @Singleton
+    fun providesMetadataRepo(firestore: FirebaseFirestore): MetadataRepo {
+        return MetadataRepoImpl(firestore)
+    }
+
 }
