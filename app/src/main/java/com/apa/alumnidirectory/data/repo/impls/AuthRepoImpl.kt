@@ -181,11 +181,11 @@ class AuthRepoImpl @Inject constructor(
 
     override suspend fun readMetadataDept(): List<String> {
         val snapshot = fetchMetadata()
-        return snapshot.get("techStacks") as? List<String> ?: emptyList()
+        return snapshot.get("departments") as? List<String> ?: emptyList()
     }
 
     override suspend fun readMetadataStacks(): List<String> {
         val snapshot = fetchMetadata()
-        return snapshot.get("departments") as? List<String> ?: emptyList()
+        return snapshot.get("techStacks") as? List<String> ?: emptyList()
     }
 }

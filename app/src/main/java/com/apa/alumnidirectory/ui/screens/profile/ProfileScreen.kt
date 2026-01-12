@@ -233,6 +233,10 @@ fun Profile(
                     fontSize = 18.sp
                 )
                 Text(
+                    "Department: ${user.department}",
+                    fontSize = 18.sp
+                )
+                Text(
                     "Stack: ${user.primaryStack}",
                     fontSize = 18.sp
                 )

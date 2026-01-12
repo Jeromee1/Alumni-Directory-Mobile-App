@@ -21,6 +21,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -53,8 +54,11 @@ fun AdminManageScreen(
     navController: NavController,
     viewModel: AdminManageViewModel = hiltViewModel()
 ) {
-    val scope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        viewModel.fetchUsers()
+    }
 
+    val scope = rememberCoroutineScope()
 
     val users by viewModel.userList.collectAsStateWithLifecycle()
     val filter by viewModel.filterState.collectAsStateWithLifecycle()

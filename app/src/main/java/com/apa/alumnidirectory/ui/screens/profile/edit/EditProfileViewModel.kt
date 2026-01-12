@@ -49,6 +49,11 @@ class EditProfileViewModel @Inject constructor(
     private val _selectedState = MutableStateFlow<State?>(null)
     val selectedState = _selectedState.asStateFlow()
 
+    private val _techStacks = MutableStateFlow<List<String>>(emptyList())
+    val techStacks = _techStacks.asStateFlow()
+    private val _departments = MutableStateFlow<List<String>>(emptyList())
+    val departments = _departments.asStateFlow()
+
     val availableStates = _selectedCountry
         .map { it?.states ?: emptyList() }
         .stateIn(
@@ -61,6 +66,20 @@ class EditProfileViewModel @Inject constructor(
     init {
         fetchUser()
         fetchLoggedInUser()
+        fetchMetadata()
+    }
+
+    fun fetchMetadata() {
+        viewModelScope.launch {
+            safeApiCall {
+                repo.readMetadataDept().let { departments ->
+                    _departments.update { departments }
+                }
+                repo.readMetadataStacks().let { stacks ->
+                    _techStacks.update { stacks }
+                }
+            }
+        }
     }
 
     fun fetchLoggedInUser() {
