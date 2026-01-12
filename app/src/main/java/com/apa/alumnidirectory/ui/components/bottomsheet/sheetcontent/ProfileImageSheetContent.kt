@@ -17,7 +17,7 @@ fun ProfileImageSheetContent(
     selectedPfp: Int,
     onSelectedChanged: (Int) -> Unit
 ) {
-    val items = listOf(0, 1, 2)
+    val items = listOf(0, 1, 2, 3, 4, 5)
     var selectedPfp by remember { mutableIntStateOf(selectedPfp) }
 
     LazyVerticalGrid(

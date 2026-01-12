@@ -34,7 +34,7 @@ fun CustomTopBar(
             .background(Secondary)
             .padding(
                 16.dp,
-                if(showBackBtn) 30.dp else 8.dp,
+                30.dp,
                 16.dp,
                 8.dp
             )

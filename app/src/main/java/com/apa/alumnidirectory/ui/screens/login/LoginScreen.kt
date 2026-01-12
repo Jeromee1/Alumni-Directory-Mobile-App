@@ -98,7 +98,8 @@ fun LoginScreen(
                 "Login",
                 listOf(
                     FieldData("Email", form.email) { form = form.copy(email = it)},
-                    FieldData("Password", form.password) { form = form.copy(password = it) }
+                    FieldData("Password", form.password, isPassword = true)
+                    { form = form.copy(password = it) }
                 )
             )
         }
