@@ -19,10 +19,6 @@ class DashboardViewModel @Inject constructor(
     private var _uiState = MutableStateFlow(DashboardUiState())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        loadDashboard()
-    }
-
     fun loadDashboard() {
         viewModelScope.launch {
             safeApiCall {

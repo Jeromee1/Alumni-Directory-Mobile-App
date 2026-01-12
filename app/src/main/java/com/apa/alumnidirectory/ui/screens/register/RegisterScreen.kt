@@ -46,6 +46,7 @@ import com.apa.alumnidirectory.data.utils.generateGradYears
 import com.apa.alumnidirectory.ui.components.inputs.CustomDropdown
 import com.apa.alumnidirectory.ui.components.inputs.CustomTextFieldBoxBG
 import com.apa.alumnidirectory.ui.theme.SecondaryG
+import com.apa.alumnidirectory.ui.uiutils.sortWithOtherLast
 
 @Composable
 fun RegisterScreen(
@@ -134,11 +135,16 @@ fun RegisterScreen(
                 CustomTextFieldBoxBG(
                     categoryName = "Academic Info",
                     fields = listOf(
-                        FieldData("Graduation Year",
+                        FieldData(
+                            "Graduation Year",
                             graduationYear,
                             generateGradYears().map { it.toString() })
                         { form = copy(graduationYear = it) },
-                        FieldData("Department", department, departments)
+                        FieldData(
+                            "Department",
+                            department,
+                            departments.sortWithOtherLast()
+                        )
                         { form = copy(department = it) }
                     )
                 )
@@ -150,7 +156,11 @@ fun RegisterScreen(
                         { form = copy(position = it) },
                         FieldData("Company", company)
                         { form = copy(company = it) },
-                        FieldData("Tech Stack", techStack, stacks)
+                        FieldData(
+                            "Tech Stack",
+                            techStack,
+                            stacks.sortWithOtherLast()
+                        )
                         { form = copy(techStack = it) }
                     )
                 )
